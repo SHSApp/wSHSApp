@@ -1,0 +1,46 @@
+﻿@inject BrowserService Service
+
+<Table Hoverable FixedHeader FixedHeaderTableHeight="@tableSize" FixedHeaderTableMaxHeight="@tableSize">
+    <TableHeader ThemeContrast="ThemeContrast.Light">
+        <TableRow>
+            <TableHeaderCell>#</TableHeaderCell>
+            <TableHeaderCell>Дата</TableHeaderCell>
+            <TableHeaderCell>Тип письма</TableHeaderCell>
+            <TableHeaderCell>Количество</TableHeaderCell>
+            <AuthorizeView>
+                <TableHeaderCell>Кому/От кого</TableHeaderCell>
+                <TableHeaderCell>Куда/Откуда</TableHeaderCell>
+            </AuthorizeView>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @for (int i = LetterInfo.Count - 1; i > -1 ; --i)
+        {
+            var index = (i + 1).ToString();
+            var letterItem = LetterInfo[i];
+            <TableRow @key="@index">
+                <TableRowHeader>@index</TableRowHeader>
+                <TableRowCell>@letterItem.Date</TableRowCell>
+                <TableRowCell>@letterItem.Type</TableRowCell>
+                <TableRowCell>@letterItem.Count</TableRowCell>
+                <AuthorizeView>
+                    <TableRowCell>@letterItem.ToWhom</TableRowCell>
+                    <TableRowCell>@letterItem.Where</TableRowCell>
+                </AuthorizeView>
+            </TableRow>
+        }
+    </TableBody>
+</Table>
+
+@code {
+    [Parameter] public List<LetterItem>? LetterInfo { get; set; }
+
+    private BrowserDimension size { get; set; }
+    private string tableSize { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        size = await Service.GetDimensions();
+        tableSize = (size.Height - 200).ToString() + "px";
+    }
+}

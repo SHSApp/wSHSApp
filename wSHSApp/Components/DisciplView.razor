@@ -1,0 +1,58 @@
+﻿@inject BrowserService Service
+
+<CardItem Title="Взыскания">
+    <Table Hoverable FixedHeader FixedHeaderTableHeight="@tableSize" FixedHeaderTableMaxHeight="@tableSize">
+        <TableHeader ThemeContrast="ThemeContrast.Light">
+            <TableRow>
+                <TableHeaderCell>#</TableHeaderCell>
+                <AuthorizeView>
+                    <TableHeaderCell>Дата нарушения</TableHeaderCell>
+                </AuthorizeView>
+                <TableHeaderCell>Дата взыскания</TableHeaderCell>
+                <TableHeaderCell>Нарушение</TableHeaderCell>
+                <TableHeaderCell>Взыскание</TableHeaderCell>
+                <TableHeaderCell>Срок</TableHeaderCell>
+                <AuthorizeView>
+                    <TableHeaderCell>Кем вынесено</TableHeaderCell>
+                    <TableHeaderCell>Примечание</TableHeaderCell>
+                </AuthorizeView>
+                <TableHeaderCell>Отметка о снятии</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @for (int i = 0; i < DisciplInfo?.Count; ++i)
+            {
+                var index = (i + 1).ToString();
+                var disciplItem = DisciplInfo[i];
+                <TableRow @key="@index" Color="@(disciplItem.Penalty.Contains("ШИЗО")?Color.Warning:disciplItem.Penalty.Contains("ПКТ")?Color.Danger:Color.Default)">
+                    <TableRowHeader>@index</TableRowHeader>
+                    <AuthorizeView>
+                        <TableRowCell>@disciplItem.DateOfViolation</TableRowCell>
+                    </AuthorizeView>
+                    <TableRowCell>@disciplItem.Date</TableRowCell>
+                    <TableRowCell>@disciplItem.Violation</TableRowCell>
+                    <TableRowCell>@disciplItem.Penalty</TableRowCell>
+                    <TableRowCell>@disciplItem.Term</TableRowCell>
+                    <AuthorizeView>
+                        <TableRowCell>@disciplItem.WhoMadeDecision</TableRowCell>
+                        <TableRowCell>@disciplItem.Note</TableRowCell>
+                    </AuthorizeView>
+                    <TableRowCell>@disciplItem.Mark</TableRowCell>
+                </TableRow>
+            }
+        </TableBody>
+    </Table>
+</CardItem>
+
+@code {
+    [Parameter] public List<DisciplItem>? DisciplInfo { get; set; }
+
+    private BrowserDimension size { get; set; }
+    private string tableSize { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        size = await Service.GetDimensions();
+        tableSize = (size.Height - 200).ToString() + "px";
+    }
+}

@@ -1,0 +1,32 @@
+﻿<Table Borderless Hoverable Narrow>
+    <TableBody>
+        <TableRow>
+            <TableRowHeader>Дата освобождения</TableRowHeader>
+            <TableRowCell>@Release?.ReleaseDate</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Дата постановления</TableRowHeader>
+            <TableRowCell>@Release?.ResolutionDate</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Кто вынес</TableRowHeader>
+            <TableRowCell>@Release?.CourtName</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Основание</TableRowHeader>
+            <TableRowCell>@Release?.Reason</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Характер</TableRowHeader>
+            <TableRowCell>@Release?.Type</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Куда убыл</TableRowHeader>
+            <TableRowCell>@Release?.DepartureAdress</TableRowCell>
+        </TableRow>
+    </TableBody>
+</Table>
+
+@code {
+    [Parameter] public Release? Release { get; set; }
+}

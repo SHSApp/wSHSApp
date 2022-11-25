@@ -1,0 +1,32 @@
+﻿<Table Borderless Hoverable Narrow>
+    <TableBody>
+        <TableRow>
+            <TableRowHeader>Место рождения</TableRowHeader>
+            <TableRowCell>@Prisoner?.PlaceOfBirth</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Место регистрации</TableRowHeader>
+            <TableRowCell>@Prisoner?.PlaceOfRegistration</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Место работы</TableRowHeader>
+            <TableRowCell>@Prisoner?.PlaceOfWork</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Должность</TableRowHeader>
+            <TableRowCell>@Prisoner?.JobTitle</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Образование</TableRowHeader>
+            <TableRowCell>@Prisoner?.Education</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Семья</TableRowHeader>
+            <TableRowCell>@Prisoner?.MaritalStatus</TableRowCell>
+        </TableRow>
+    </TableBody>
+</Table>
+
+@code {
+    [Parameter] public CommonInfo? Prisoner { get; set; }
+}

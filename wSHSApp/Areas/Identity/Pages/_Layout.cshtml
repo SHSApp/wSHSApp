@@ -1,0 +1,72 @@
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.AspNetCore.Mvc.ViewEngines
+@inject IWebHostEnvironment Environment
+@inject ICompositeViewEngine Engine
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ¬Â·-¿ ”—</title>
+    <link rel="stylesheet" href="~/css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark login-row border-bottom box-shadow mb-3">
+            <div class="container">
+                <img src="~/img/wkus.png" class="img-fluid" />
+                <a class="navbar-brand" href="/">¬Â·-¿ ”—</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex">
+                    <div class="nav-item">
+                        <a class="nav-link text-light" href="/">√Î‡‚Ì‡ˇ</a>
+                    </div>
+                </div>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    @{
+                        var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
+                    }
+                    @if (result.Success)
+                    {
+                        await Html.RenderPartialAsync("_LoginPartial");
+                    }
+                    else
+                    {
+                        
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <partial name="_CookieConsentPartial" optional />
+        <main role="main" class="pb-1">
+            @RenderBody()
+        </main>
+    </div>
+
+    <environment include="Development">
+        <script src="~/Identity/lib/jquery/dist/jquery.js"></script>
+        <script src="~/Identity/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        <script src="~/Identity/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/Identity/lib/jquery/dist/jquery.min.js"
+                crossorigin="anonymous"
+                integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2">
+        </script>
+        <script src="~/Identity/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+                crossorigin="anonymous"
+                integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj">
+        </script>
+        <script src="~/Identity/js/site.js" asp-append-version="true"></script>
+    </environment>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

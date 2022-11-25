@@ -1,0 +1,39 @@
+﻿<CardItem Title="Список документов">
+    <Table Hoverable>
+        <TableHeader ThemeContrast="ThemeContrast.Light">
+            <TableRow>
+                <TableHeaderCell>#</TableHeaderCell>
+                <TableHeaderCell>Наименование</TableHeaderCell>
+                <TableHeaderCell>Наличие в личном деле</TableHeaderCell>
+                <TableHeaderCell>Серия</TableHeaderCell>
+                <TableHeaderCell>Номер</TableHeaderCell>
+                <TableHeaderCell>Код подразделения</TableHeaderCell>
+                <TableHeaderCell>Кем выдан</TableHeaderCell>
+                <TableHeaderCell>Кем выдан (учреждение)</TableHeaderCell>
+                <TableHeaderCell>Дата выдачи</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @for (int i = 0; i < DocumentInfo?.Count; ++i)
+            {
+                var index = (i + 1).ToString();
+                var documentItem = DocumentInfo[i];
+                <TableRow @key="@index" Color="@(!documentItem.Avail ? Color.Danger : documentItem.Name.Contains("Паспорт") ? Color.Success : Color.Default)">
+                    <TableRowHeader>@index</TableRowHeader>
+                    <TableRowCell>@documentItem.Name</TableRowCell>
+                    <TableRowCell>@(documentItem.Avail ? "Да" : "Нет")</TableRowCell>
+                        <TableRowCell>@documentItem.Series</TableRowCell>
+                        <TableRowCell>@documentItem.Number</TableRowCell>
+                        <TableRowCell>@documentItem.DivisionCode</TableRowCell>
+                        <TableRowCell>@documentItem.IssuedBy</TableRowCell>
+                        <TableRowCell>@documentItem.IssuedOrganization</TableRowCell>
+                        <TableRowCell>@documentItem.IssuedDate</TableRowCell>
+                    </TableRow>
+            }
+        </TableBody>
+    </Table>
+</CardItem>
+
+@code {
+    [Parameter] public List<DocumentItem>? DocumentInfo { get; set; }
+}

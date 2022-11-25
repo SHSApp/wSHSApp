@@ -1,0 +1,211 @@
+﻿<AuthorizeView>
+    <Authorized>
+
+    </Authorized>
+    <NotAuthorized>
+        <div class="container-fluid">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
+                    <Alert Color="Color.Success" class="info-block" Visible>
+                        <Row>
+                            @if (Prisoner?.PathToFotoFas != "")
+                            {
+                                <Image Class="rounded" Source="@Prisoner?.PathToFotoFas" />
+                            }
+                            else
+                            {
+                                <Image Class="rounded" Source="/img/no_photo.jpg" />
+                            }
+                        </Row>
+                    </Alert>
+                    <Alert Color="Color.Success" class="info-block" Visible>
+                        <Row>
+                            @if (Prisoner?.PathToFotoProf != "")
+                            {
+                                <Image Class="rounded" Source="@Prisoner?.PathToFotoProf" />
+                            }
+                            else
+                            {
+                                <Image Class="rounded" Source="/img/no_photo.jpg" />
+                            }
+                        </Row>
+                    </Alert>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is4.OnFullHD.Is5.OnWidescreen.Is5.OnDesktop.Is12.OnTablet.Is12.OnMobile">
+                    <Alert Color="Color.Success" class="info-block" Visible>
+                        <Row>
+                            <Column>
+                                <h5>Общая информация</h5>
+                                <Table Borderless Hoverable Narrow>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableRowHeader>Фамилия</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.Surname</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Имя</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.Name</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Отчество</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.Lastname</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Дата рождения</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.Birthday</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Нация</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.Nation</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Гражданство</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.Citizenship</TableRowCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </Column>
+                        </Row>
+                    </Alert>
+                    <Alert Color="Color.Success" class="info-block" Visible>
+                        <Row>
+                            <Column>
+                                <h5>Прибытие</h5>
+                                <Table Borderless Hoverable Narrow>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableRowHeader>Дата прибытия</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.ArrivalDate</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Откуда</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.ArrivalInstitution</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Тер. орган</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.ArrivalRegion</TableRowCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </Column>
+                        </Row>
+                    </Alert>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3.OnFullHD.Is5.OnWidescreen.Is5.OnDesktop.Is12.OnTablet.Is12.OnMobile">
+                    <Alert Color="Color.Success" class="info-block" Visible>
+                        <h5>Осуждение</h5>
+                        <Table Borderless Hoverable Narrow Striped>
+                            <TableBody>
+                                <TableRow>
+                                    <TableRowHeader>Дата ареста</TableRowHeader>
+                                    <TableRowCell>@Prisoner?.DetentionDate</TableRowCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableRowHeader>Дата суда</TableRowHeader>
+                                    <TableRowCell>@Prisoner?.СondemnationDate</TableRowCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableRowHeader>Суд</TableRowHeader>
+                                    <TableRowCell>@Prisoner?.CourtName</TableRowCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableRowHeader>Статьи</TableRowHeader>
+                                    <TableRowCell>@Prisoner?.Articles</TableRowCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableRowHeader>Срок</TableRowHeader>
+                                    <TableRowCell>@Prisoner?.Term</TableRowCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableRowHeader>Приговор вступил</TableRowHeader>
+                                    <TableRowCell>@Prisoner?.VerdictDate</TableRowCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableRowHeader>Начало <br /> срока</TableRowHeader>
+                                    <TableRowCell>@Prisoner?.BeginTerm</TableRowCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableRowHeader>Конец <br /> срока</TableRowHeader>
+                                    <TableRowCell>@Prisoner?.EndTerm</TableRowCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </Alert>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3.OnFullHD.Is12.OnTablet.Is12.OnMobile">
+                    <Alert Color="Color.Success" class="info-block" Visible>
+                        <Row>
+                            <Column>
+                                <h5>Прочее</h5>
+                                <Table Borderless Hoverable Narrow Striped>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableRowHeader>Табельный номер</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.PersonalNumber</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Номер отряда</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.GroupId</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Условия отбывания</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.Conditions</TableRowCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </Column>
+                        </Row>
+                    </Alert>
+                    <Alert Color="Color.Success" class="info-block" Visible>
+                        <Row>
+                            <Column>
+                                <h5>Форточки</h5>
+                                <Table Borderless Hoverable Narrow Striped>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableRowHeader>Дата УДО</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.DateUDO</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Часть до УДО</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.PartUDO</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Дата КП</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.DateKP</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Часть до КП</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.PartKP</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Дата ИР</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.DateZMN</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Часть до ИР</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.PartZMN</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Дата ПР</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.DatePR</TableRowCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableRowHeader>Часть до ПР</TableRowHeader>
+                                            <TableRowCell>@Prisoner?.PartPR</TableRowCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </Column>
+                        </Row>
+                    </Alert>
+                </Column>
+            </Row>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    [Parameter] public CommonInfo? Prisoner { get; set; }
+}

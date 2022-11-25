@@ -1,0 +1,40 @@
+﻿@inject BrowserService Service
+
+<Table Hoverable FixedHeader FixedHeaderTableHeight="@tableSize" FixedHeaderTableMaxHeight="@tableSize">
+    <TableHeader ThemeContrast="ThemeContrast.Light">
+        <TableRow>
+            <TableHeaderCell>#</TableHeaderCell>
+            <TableHeaderCell>Дата отправки</TableHeaderCell>
+            <TableHeaderCell>Вид обращения</TableHeaderCell>
+            <TableHeaderCell>Исходящий номер</TableHeaderCell>
+            <TableHeaderCell>Куда направлено</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @for (int i = PetitionInfo.Count - 1; i > -1; --i)
+        {
+            var index = (i + 1).ToString();
+            var petitionItem = PetitionInfo[i];
+            <TableRow @key="@index">
+                <TableRowHeader>@index</TableRowHeader>
+                <TableRowCell>@petitionItem.Date</TableRowCell>
+                <TableRowCell>@petitionItem.Type</TableRowCell>
+                <TableRowCell>@petitionItem.ID</TableRowCell>
+                <TableRowCell>@petitionItem.Destination</TableRowCell>
+            </TableRow>
+        }
+    </TableBody>
+</Table>
+
+@code {
+    [Parameter] public List<PetitionItem>? PetitionInfo { get; set; }
+
+    private BrowserDimension size { get; set; }
+    private string tableSize { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        size = await Service.GetDimensions();
+        tableSize = (size.Height - 200).ToString() + "px";
+    }
+}

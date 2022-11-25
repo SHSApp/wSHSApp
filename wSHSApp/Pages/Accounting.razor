@@ -1,0 +1,60 @@
+﻿@page "/accounting"
+@implements IDisposable
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Профилактический учет</PageTitle>
+
+@if (AccountingList == null)
+{
+    <Loading />
+}
+else if (AccountingList.Count > 0)
+{
+    <AccountingView AccountingInfo="@AccountingList" />
+}
+else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+{
+    <NoPrisoner />
+}
+else
+{
+    <NoData Message="На профилактическом учете не состоит." />
+}
+
+@code {
+    [Inject] private AppData appData { get; set; }
+    [Inject] private ExtraInfoService ExInfoService { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+    private List<AccountingItem>? AccountingList;
+
+    protected override void OnInitialized()
+    {
+        appData.OnChange += OnChangeHandler;
+    }
+
+    public void Dispose()
+    {
+        appData.OnChange -= OnChangeHandler;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var auth = authState.User.Identity.IsAuthenticated ? true : false;
+        AccountingList = await ExInfoService.GetAccountingInfoAsync(appData.CurrentItemperson, auth);
+    }
+
+    private async void OnChangeHandler()
+    {
+        if (Navigation.ToBaseRelativePath(Navigation.Uri) == "accounting")
+        {
+            AccountingList = null;
+            StateHasChanged();
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var auth = authState.User.Identity.IsAuthenticated ? true : false;
+            AccountingList = await ExInfoService.GetAccountingInfoAsync(appData.CurrentItemperson, auth);
+            StateHasChanged();
+        }
+    }
+}

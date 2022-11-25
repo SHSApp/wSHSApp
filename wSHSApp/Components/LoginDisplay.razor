@@ -1,0 +1,15 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <form class="form-inline" action="/Identity/Account/Logout" method="post">
+            <Link Class="px-2" TextColor="TextColor.Light" To="Identity/Account/Manage">@(context.User?.FindFirst("firstname")?.Value + " " + context.User?.FindFirst("surname")?.Value)</Link> 
+            @if (context.User.IsInRole("Admin"))
+            {
+                <Button Class="mx-2" Outline Color="Color.Light" Type="ButtonType.Link" To="Identity/Account/Register">Новый пользователь</Button>
+            }
+            <button type="submit" class="mx-2 btn btn-primary">Выйти</button>
+        </form>
+    </Authorized>
+    <NotAuthorized>
+        <Button Color="Color.Primary" Type="ButtonType.Link" To="Identity/Account/Login">Войти</Button>
+    </NotAuthorized>
+</AuthorizeView>

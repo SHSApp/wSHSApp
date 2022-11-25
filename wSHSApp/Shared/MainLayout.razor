@@ -1,0 +1,21 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>WSHSApp</PageTitle>
+
+<div class="page">
+
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+    <main>
+        <div role="navigation" class="top-navbar login-row">
+            <TopBar />
+        </div>
+        <div class="bg-light p-3 rounded-lg m-2">
+            <SearchBar />
+        </div>
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>

@@ -1,0 +1,40 @@
+﻿<Table Hoverable Narrow Borderless>
+    <TableBody>
+        <TableRow>
+            <TableRowHeader>Арест</TableRowHeader>
+            <TableRowCell>@Prisoner?.DetentionDate</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Дата суда</TableRowHeader>
+            <TableRowCell>@Prisoner?.СondemnationDate</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Суд</TableRowHeader>
+            <TableRowCell>@Prisoner?.CourtName</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Статьи</TableRowHeader>
+            <TableRowCell>@Prisoner?.Articles</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Срок</TableRowHeader>
+            <TableRowCell>@Prisoner?.Term</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Приговор вступил</TableRowHeader>
+            <TableRowCell>@Prisoner?.VerdictDate</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Начало срока</TableRowHeader>
+            <TableRowCell>@Prisoner?.BeginTerm</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Конец срока</TableRowHeader>
+            <TableRowCell>@Prisoner?.EndTerm</TableRowCell>
+        </TableRow>
+    </TableBody>
+</Table>
+
+@code {
+    [Parameter] public CommonInfo? Prisoner { get; set; }
+}

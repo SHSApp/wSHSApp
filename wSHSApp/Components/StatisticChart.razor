@@ -1,0 +1,62 @@
+﻿@using System
+
+<LoadingIndicator @ref="loadingIndicator">
+    <Chart @ref="barChart" Type="ChartType.Bar" TItem="double" Clicked="@OnClicked" Options="@chartOptions" />
+</LoadingIndicator>
+
+@code {
+    [Inject] private StatisticInfoService InfoService { get; set; }
+
+    LoadingIndicator? loadingIndicator;
+
+    Chart<double>? barChart;
+
+    List<double>? data;
+
+    static int nowYear = DateTime.UtcNow.Year;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await HandleRedraw();
+        }
+    }
+
+    ChartOptions chartOptions = new()
+        {
+            AspectRatio = 2.44
+        };
+
+    async Task HandleRedraw()
+    {
+        await loadingIndicator.Show();
+        data = await InfoService.GetDisciplineStatistic(nowYear);
+        await barChart.Clear();
+        await barChart.AddLabelsDatasetsAndUpdate(Labels, GetBarChartDataset());
+        await loadingIndicator.Hide();
+    }
+
+    private BarChartDataset<double> GetBarChartDataset()
+    {
+        return new()
+        {
+            Label = "Статистика нарушений и поощрений",
+            Data = data,
+            BackgroundColor = backgroundColors,
+            BorderColor = borderColors,
+            BorderWidth = 1
+        };
+    }
+
+    string[] Labels = { $"Нарушения {nowYear} г.", $"Нарушения {nowYear - 1} г.", $"Поощрения {nowYear} г.", $"Поощрения {nowYear - 1} г." };
+    List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f) };
+    List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f) };
+
+    Task OnClicked(ChartMouseEventArgs e)
+    {
+        //var model = e.Model as BarChartModel;
+        //Console.WriteLine($"Клик мышкой на {nameof(BarChartModel)}: x:{model.X} y:{model.Y}");
+        return Task.CompletedTask;
+    }
+}

@@ -1,0 +1,40 @@
+﻿@inject BrowserService Service
+
+<CardItem Title="Поощрения">
+    <Table Hoverable FixedHeader FixedHeaderTableHeight="@tableSize" FixedHeaderTableMaxHeight="@tableSize">
+        <TableHeader ThemeContrast="ThemeContrast.Light">
+            <TableRow>
+                <TableHeaderCell>#</TableHeaderCell>
+                <TableHeaderCell>Дата объявления</TableHeaderCell>
+                <TableHeaderCell>За что</TableHeaderCell>
+                <TableHeaderCell>Вид поощрения</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @for (int i = 0; i < AwardInfo?.Count; ++i)
+            {
+                var index = (i + 1).ToString();
+                var awardItem = AwardInfo[i];
+                <TableRow @key="@index">
+                    <TableRowHeader>@index</TableRowHeader>
+                    <TableRowCell>@awardItem.Date</TableRowCell>
+                    <TableRowCell>@awardItem.Reason</TableRowCell>
+                    <TableRowCell>@awardItem.Gift</TableRowCell>
+                </TableRow>
+            }
+        </TableBody>
+    </Table>
+</CardItem>
+
+@code {
+    [Parameter] public List<AwardItem>? AwardInfo { get; set; }
+
+    private BrowserDimension size { get; set; }
+    private string tableSize { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        size = await Service.GetDimensions();
+        tableSize = (size.Height - 200).ToString() + "px";
+    }
+}

@@ -1,0 +1,57 @@
+﻿@inject BrowserService Service
+
+<CardItem Title="Исполнительные листы">
+    <Table Hoverable FixedHeader FixedHeaderTableHeight="@tableSize" FixedHeaderTableMaxHeight="@tableSize">
+        <TableHeader ThemeContrast="ThemeContrast.Light">
+            <TableRow>
+                <TableHeaderCell>#</TableHeaderCell>
+                <TableHeaderCell>Дата выдачи</TableHeaderCell>
+                <TableHeaderCell>Номер</TableHeaderCell>
+                <TableHeaderCell>Кем выдан</TableHeaderCell>
+                <TableHeaderCell>Основание</TableHeaderCell>
+                <TableHeaderCell>Взыскатель</TableHeaderCell>
+                <TableHeaderCell>Сумма иска, руб.</TableHeaderCell>
+                <TableHeaderCell>Размер алиментов</TableHeaderCell>
+                <TableHeaderCell>Основания для прекращения</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @for (int i = 0; i < DebtInfo?.Count; ++i)
+            {
+                var index = (i + 1).ToString();
+                var debtItem = DebtInfo[i];
+                <TableRow @key="@index" Color="@GetColor(debtItem)">
+                    <TableRowHeader>@index</TableRowHeader>
+                    <TableRowCell>@debtItem.Date</TableRowCell>
+                    <TableRowCell>@debtItem.ID</TableRowCell>
+                    <TableRowCell>@debtItem.IssuedBy</TableRowCell>
+                    <TableRowCell>@debtItem.Reason</TableRowCell>
+                    <TableRowCell>@debtItem.Claimant</TableRowCell>
+                    <TableRowCell>@debtItem.Total</TableRowCell>
+                    <TableRowCell>@debtItem.Alimony</TableRowCell>
+                    <TableRowCell>@debtItem.EndReason</TableRowCell>
+                </TableRow>
+            }
+        </TableBody>
+    </Table>
+</CardItem>
+
+@code {
+    [Parameter] public List<DebtItem>? DebtInfo { get; set; }
+
+    private Color GetColor(DebtItem item)
+    {
+        return item.Reason.Contains("алим") ? Color.Warning :
+        item.EndReason.Contains("расч") ? Color.Success :
+        item.EndReason.Contains("пост") ? Color.Info : Color.Default;
+    }
+
+    private BrowserDimension size { get; set; }
+    private string tableSize { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        size = await Service.GetDimensions();
+        tableSize = (size.Height - 200).ToString() + "px";
+    }
+}

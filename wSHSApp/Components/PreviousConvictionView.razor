@@ -1,0 +1,41 @@
+﻿<CardItem Title="Прежние судимости">
+    <Table Hoverable>
+        <TableHeader ThemeContrast="ThemeContrast.Light">
+            <TableRow>
+                <TableHeaderCell>#</TableHeaderCell>
+                <TableHeaderCell>Дата осуждения</TableHeaderCell>
+                <TableHeaderCell>Кем осужден</TableHeaderCell>
+                <TableHeaderCell>Статьи</TableHeaderCell>
+                <TableHeaderCell>Режим</TableHeaderCell>
+                <TableHeaderCell>Срок</TableHeaderCell>
+                <TableHeaderCell>Текст по приговору</TableHeaderCell>
+                <TableHeaderCell>Примечание</TableHeaderCell>
+                <TableHeaderCell>Дата освобождения</TableHeaderCell>
+                <TableHeaderCell>Основание освобождения</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @for (int i = 0; i < CriminalInfo?.Count; ++i)
+            {
+                var index = (i + 1).ToString();
+                var criminalItem = CriminalInfo[i];
+                <TableRow @key="@index">
+                    <TableRowHeader>@index</TableRowHeader>
+                    <TableRowCell>@criminalItem.Date</TableRowCell>
+                    <TableRowCell>@criminalItem.CourtName</TableRowCell>
+                    <TableRowCell>@criminalItem.Articles</TableRowCell>
+                    <TableRowCell>@criminalItem.Mode</TableRowCell>
+                    <TableRowCell>@criminalItem.Term</TableRowCell>
+                    <TableRowCell>@criminalItem.Text</TableRowCell>
+                    <TableRowCell>@criminalItem.Note</TableRowCell>
+                    <TableRowCell>@criminalItem.ReleaseDate</TableRowCell>
+                    <TableRowCell>@criminalItem.ReleaseReason</TableRowCell>
+                </TableRow>
+            }
+        </TableBody>
+    </Table>
+</CardItem>
+
+@code {
+    [Parameter] public List<CriminalItem>? CriminalInfo { get; set; }
+}

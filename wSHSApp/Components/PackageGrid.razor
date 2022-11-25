@@ -1,0 +1,22 @@
+﻿<DataGrid TItem="PackageItem"
+          Data="@PackageInfo"
+          @bind-SelectedRow="@selectedItem"
+          Narrow
+          ShowPager          
+          PageSize="11">
+    <DataGridCommandColumn />
+    <DataGridColumn Field="@nameof(PackageItem.Date)" Caption="Дата" Sortable />
+    <DataGridColumn Field="@nameof(PackageItem.Type)" Caption="Вид" Sortable />
+    <DataGridColumn Field="@nameof(PackageItem.Note)" Caption="Тип" Sortable />
+    <AuthorizeView>
+        <DataGridColumn Field="@nameof(PackageItem.WhoPassed)" Caption="Кто передал" Sortable />
+        <DataGridColumn Field="@nameof(PackageItem.WhoTook)" Caption="Кто досматривал" Sortable />
+        <DataGridColumn Field="@nameof(PackageItem.Note2)" Caption="Примечание" Sortable />
+    </AuthorizeView>    
+</DataGrid>
+
+@code {
+    [Parameter] public List<PackageItem>? PackageInfo { get; set; }
+
+    private PackageItem? selectedItem;
+}

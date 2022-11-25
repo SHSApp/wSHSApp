@@ -1,0 +1,63 @@
+﻿<Table Hoverable Narrow Borderless>
+    <TableBody>
+        <TableRow>
+            <TableRowHeader>Фамилия</TableRowHeader>
+            <TableRowCell>@Prisoner?.Surname</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Имя</TableRowHeader>
+            <TableRowCell>@Prisoner?.Name</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Отчество</TableRowHeader>
+            <TableRowCell>@Prisoner?.Lastname</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Дата рождения</TableRowHeader>
+            <TableRowCell>@Prisoner?.Birthday</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Нация</TableRowHeader>
+            <TableRowCell>@Prisoner?.Nation</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Гражданство</TableRowHeader>
+            <TableRowCell>@Prisoner?.Citizenship</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Таб. номер</TableRowHeader>
+            <TableRowCell>@Prisoner?.PersonalNumber</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Отряд</TableRowHeader>
+            <TableRowCell>@Prisoner?.GroupId</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Условия</TableRowHeader>
+            <TableRowCell TextColor="@getConditionColor(Prisoner?.Conditions)">@Prisoner?.Conditions</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Статус</TableRowHeader>
+            <TableRowCell TextColor="@getStatusColor(Prisoner?.Status)">@Prisoner?.Status</TableRowCell>
+        </TableRow>
+    </TableBody>
+</Table>
+
+@code {
+    [Parameter] public CommonInfo? Prisoner { get; set; }
+
+    private TextColor getStatusColor(string? status)
+    {
+        if (status.Contains("налич")) return TextColor.Success;
+        else if (status.Contains("Убыл")) return TextColor.Danger;
+        else if (status.Contains("Освоб")) return TextColor.Primary;
+        else return TextColor.Default;
+    }
+
+    private TextColor getConditionColor(string? conditions)
+    {
+        if (conditions.Contains("Облегч")) return TextColor.Success;
+        else if (conditions.Contains("Строгие")) return TextColor.Danger;
+        else return TextColor.Default;
+    }
+}

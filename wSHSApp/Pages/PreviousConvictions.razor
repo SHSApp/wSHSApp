@@ -1,0 +1,56 @@
+﻿@page "/convictions"
+@attribute [Authorize]
+@implements IDisposable
+
+<PageTitle>Прежние судимости</PageTitle>
+
+@if (CriminalList == null)
+{
+    <Loading />
+}
+else if (CriminalList.Count > 0)
+{
+    <PreviousConvictionView CriminalInfo="@CriminalList" />
+}
+else if ((appData?.CurrentItemperson == null) || (appData?.CurrentItemperson == ""))
+{
+    <NoPrisoner />
+}
+else
+{
+    <NoData Message="Ранее не судим." />
+}
+
+@code {
+    [Inject] private AppData? appData { get; set; }
+    [Inject] private AdditionalInfoService AddInfoService { get; set; }
+    [Inject] NavigationManager? Navigation { get; set; }
+    private List<CriminalItem>? CriminalList;
+
+    protected override void OnInitialized()
+    {
+        appData.OnChange += OnChangeHandler;
+    }
+
+    public void Dispose()
+    {
+        appData.OnChange -= OnChangeHandler;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        OnChangeHandler();
+    }
+
+    private async void OnChangeHandler()
+    {
+        if (Navigation?.ToBaseRelativePath(Navigation.Uri) == "convictions")
+        {
+            CriminalList = null;
+            StateHasChanged();
+            CriminalList = await AddInfoService.GetPreviousConvictionsInfoAsync(appData?.CurrentItemperson);
+            StateHasChanged();
+        }
+    }
+}

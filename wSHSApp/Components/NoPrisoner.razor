@@ -1,0 +1,13 @@
+﻿<Alert Color="Color.Danger" @bind-Visible="@visible">
+    <Heading Size="HeadingSize.Is4">
+        Выберите осужденного!
+        <CloseButton />
+    </Heading>
+    <Paragraph>
+        Для того чтобы выбрать осужденного, просто начните вводить в поле поиска его фамилию, затем выберите нужного в выпадающем списке.        
+    </Paragraph>    
+</Alert>
+
+@code {
+    bool visible = true;
+}

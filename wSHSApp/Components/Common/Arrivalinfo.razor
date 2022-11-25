@@ -1,0 +1,20 @@
+﻿<Table Hoverable Narrow Borderless>
+    <TableBody>
+        <TableRow>
+            <TableRowHeader>Дата прибытия</TableRowHeader>
+            <TableRowCell>@Prisoner?.ArrivalDate</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Откуда</TableRowHeader>
+            <TableRowCell>@Prisoner?.ArrivalInstitution</TableRowCell>
+        </TableRow>
+        <TableRow>
+            <TableRowHeader>Тер. орган</TableRowHeader>
+            <TableRowCell>@Prisoner?.ArrivalRegion</TableRowCell>
+        </TableRow>
+    </TableBody>
+</Table>
+
+@code {
+    [Parameter] public CommonInfo? Prisoner { get; set; }
+}

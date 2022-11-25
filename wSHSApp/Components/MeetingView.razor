@@ -1,0 +1,50 @@
+﻿@inject BrowserService Service
+
+<CardItem Title="Предоставленные свидания">
+    <Table Hoverable FixedHeader FixedHeaderTableHeight="@tableSize" FixedHeaderTableMaxHeight="@tableSize">
+        <TableHeader ThemeContrast="ThemeContrast.Light">
+            <TableRow>
+                <TableHeaderCell>#</TableHeaderCell>
+                <TableHeaderCell>Дата свидания</TableHeaderCell>
+                <TableHeaderCell>Тип свидания</TableHeaderCell>
+                <TableHeaderCell>Продолжительность</TableHeaderCell>
+                <AuthorizeView>
+                    <TableHeaderCell>С кем</TableHeaderCell>
+                    <TableHeaderCell>Степень родства</TableHeaderCell>
+                    <TableHeaderCell>Кто проводил</TableHeaderCell>
+                </AuthorizeView>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @for (int i = MeetingInfo.Count - 1; i > -1; --i)
+            {
+                var index = (i + 1).ToString();
+                var meetingItem = MeetingInfo[i];
+                <TableRow @key="@index" Color="@(meetingItem.Type.Contains("Крат")?Color.Secondary:Color.Default)">
+                    <TableRowHeader>@index</TableRowHeader>
+                    <TableRowCell>@meetingItem.Date</TableRowCell>
+                    <TableRowCell>@meetingItem.Type</TableRowCell>
+                    <TableRowCell>@meetingItem.Duration</TableRowCell>
+                    <AuthorizeView>
+                        <TableRowCell>@meetingItem.WhoIsDate</TableRowCell>
+                        <TableRowCell>@meetingItem.Relation</TableRowCell>
+                        <TableRowCell>@meetingItem.WhoSpent</TableRowCell>
+                    </AuthorizeView>
+                </TableRow>
+            }
+        </TableBody>
+    </Table>
+</CardItem>
+
+@code {
+    [Parameter] public List<MeetingItem>? MeetingInfo { get; set; }
+
+    private BrowserDimension size { get; set; }
+    private string tableSize { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        size = await Service.GetDimensions();
+        tableSize = (size.Height - 200).ToString() + "px";
+    }
+}

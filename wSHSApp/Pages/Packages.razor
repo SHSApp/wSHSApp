@@ -1,0 +1,60 @@
+﻿@page "/packages"
+@implements IDisposable
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Посылки/передачи</PageTitle>
+
+@if (PackageList == null)
+{
+    <Loading />
+}
+else if (PackageList.Count > 0)
+{
+    <PackageView PackageInfo="@PackageList" />
+}
+else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+{
+    <NoPrisoner />
+}
+else
+{
+    <NoData Message="Посылки/передачи не поступали." />
+}
+
+@code {
+    [Inject] private AppData appData { get; set; }
+    [Inject] private ExtraInfoService ExInfoService { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+    private List<PackageItem>? PackageList;
+
+    protected override void OnInitialized()
+    {
+        appData.OnChange += OnChangeHandler;
+    }
+
+    public void Dispose()
+    {
+        appData.OnChange -= OnChangeHandler;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var auth = authState.User.Identity.IsAuthenticated ? true : false;
+        PackageList = await ExInfoService.GetPackagesInfoAsync(appData.CurrentItemperson, auth);
+    }
+
+    private async void OnChangeHandler()
+    {
+        if (Navigation.ToBaseRelativePath(Navigation.Uri) == "packages")
+        {
+            PackageList = null;
+            StateHasChanged();
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var auth = authState.User.Identity.IsAuthenticated ? true : false;
+            PackageList = await ExInfoService.GetPackagesInfoAsync(appData.CurrentItemperson, auth);
+            StateHasChanged();
+        }
+    }
+}

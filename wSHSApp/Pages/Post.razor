@@ -1,0 +1,122 @@
+﻿@page "/post"
+@implements IDisposable
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Письма/обращения</PageTitle>
+
+<Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged">
+    <Items>
+        <Tab Name="petitions">Обращения (ходатайства, жалобы, заявления)</Tab>
+        <Tab Name="letters">Письма гражданским лицам</Tab>
+    </Items>
+    <Content>
+        <TabPanel Name="petitions">
+            @if (PetitionList == null)
+            {
+                <Loading />
+            }
+            else if (PetitionList.Count > 0)
+            {
+                <BorderedItem>
+                    <PetitionView PetitionInfo="@PetitionList" />
+                </BorderedItem>
+            }
+            else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+            {
+                <br />
+                <NoPrisoner />
+            }
+            else
+            {
+                <br />
+                <NoData Message="Обращения не регистрировались." />
+            }
+        </TabPanel>
+        <TabPanel Name="letters">
+            @if (LetterList == null)
+            {
+                <Loading />
+            }
+            else if (LetterList.Count > 0)
+            {
+                <BorderedItem>
+                    <LetterView LetterInfo="@LetterList" />
+                </BorderedItem>
+            }
+            else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+            {
+                <br />
+                <NoPrisoner />
+            }
+            else
+            {
+                <br />
+                <NoData Message="Письма не регистрировались." />
+            }
+        </TabPanel>
+    </Content>
+</Tabs>
+
+@code {
+    private string selectedTab = "petitions";
+    [Inject] private AppData appData { get; set; }
+    [Inject] private ExtraInfoService ExInfoService { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+    private List<PetitionItem>? PetitionList;
+    private List<LetterItem>? LetterList;
+
+    protected override void OnInitialized()
+    {
+        appData.OnChange += OnChangeHandler;
+    }
+
+    public void Dispose()
+    {
+        appData.OnChange -= OnChangeHandler;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (selectedTab == "petitions")
+        {
+            PetitionList = await ExInfoService.GetPetitionsInfoAsync(appData.CurrentItemperson);
+        }
+        else if (selectedTab == "letters")
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var auth = authState.User.Identity.IsAuthenticated ? true : false;
+            LetterList = await ExInfoService.GetLettersInfoAsync(appData.CurrentItemperson, auth);
+        }
+    }
+
+    private void OnSelectedTabChanged(string name)
+    {
+        selectedTab = name;
+        OnChangeHandler();
+    }
+
+    private async void OnChangeHandler()
+    {
+        if (Navigation.ToBaseRelativePath(Navigation.Uri) == "post")
+        {
+            if (selectedTab == "petitions")
+            {
+                PetitionList = null;
+                StateHasChanged();
+                PetitionList = await ExInfoService.GetPetitionsInfoAsync(appData.CurrentItemperson);
+                StateHasChanged();
+            }
+            else if (selectedTab == "letters")
+            {
+                LetterList = null;
+                StateHasChanged();
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var auth = authState.User.Identity.IsAuthenticated ? true : false;
+                LetterList = await ExInfoService.GetLettersInfoAsync(appData.CurrentItemperson, auth);
+                StateHasChanged();
+            }
+
+        }
+    }
+}

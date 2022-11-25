@@ -1,0 +1,61 @@
+﻿@page "/discipline"
+@implements IDisposable
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Взыскания</PageTitle>
+
+@if (DisciplList == null)
+{
+    <Loading />
+}
+else if (DisciplList.Count > 0)
+{
+    <DisciplView DisciplInfo="@DisciplList" />
+}
+else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+{
+    <NoPrisoner />
+}
+else 
+{
+    <NoData Message="Взысканий нет." />
+}
+
+@code {
+    [Inject] private AppData appData { get; set; }
+    [Inject] private ExtraInfoService ExInfoService { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+
+    private List<DisciplItem>? DisciplList;
+
+    protected override void OnInitialized()
+    {
+        appData.OnChange += OnChangeHandler;
+    }
+
+    public void Dispose()
+    {
+        appData.OnChange -= OnChangeHandler;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var auth = authState.User.Identity.IsAuthenticated ? true : false;
+        DisciplList = await ExInfoService.GetDisсiplInfoAsync(appData.CurrentItemperson, auth);
+    }
+
+    private async void OnChangeHandler() 
+    {
+        if (Navigation.ToBaseRelativePath(Navigation.Uri) == "discipline")
+        {
+            DisciplList = null;
+            StateHasChanged();
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var auth = authState.User.Identity.IsAuthenticated ? true : false;
+            DisciplList = await ExInfoService.GetDisсiplInfoAsync(appData.CurrentItemperson, auth);
+            StateHasChanged();
+        }       
+    }
+}

@@ -1,0 +1,50 @@
+﻿@inject BrowserService Service
+
+<CardItem Title="Полученные передачи">
+    <Table Hoverable FixedHeader FixedHeaderTableHeight="@tableSize" FixedHeaderTableMaxHeight="@tableSize">
+        <TableHeader ThemeContrast="ThemeContrast.Light">
+            <TableRow>
+                <TableHeaderCell>#</TableHeaderCell>
+                <TableHeaderCell>Дата получения</TableHeaderCell>
+                <TableHeaderCell>Вид передачи</TableHeaderCell>
+                <TableHeaderCell>Тип передачи</TableHeaderCell>
+                <AuthorizeView>
+                    <TableHeaderCell>От кого поступила</TableHeaderCell>
+                    <TableHeaderCell>Кто досматривал</TableHeaderCell>
+                    <TableHeaderCell>Примечание</TableHeaderCell>
+                </AuthorizeView>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @for (int i = PackageInfo.Count - 1; i > -1; --i)
+            {
+                var index = (i + 1).ToString();
+                var packageItem = PackageInfo[i];
+                <TableRow @key="@index" Color="@(packageItem.Note.Contains("Медиц")?Color.Info:packageItem.Note.Contains("поощр")?Color.Success:Color.Default)">
+                    <TableRowHeader>@index</TableRowHeader>
+                    <TableRowCell>@packageItem.Date</TableRowCell>
+                    <TableRowCell>@packageItem.Type</TableRowCell>
+                    <TableRowCell>@packageItem.Note</TableRowCell>
+                    <AuthorizeView>
+                        <TableRowCell>@packageItem.WhoPassed</TableRowCell>
+                        <TableRowCell>@packageItem.WhoTook</TableRowCell>
+                        <TableRowCell>@packageItem.Note2</TableRowCell>
+                    </AuthorizeView>
+                </TableRow>
+            }
+        </TableBody>
+    </Table>
+</CardItem>
+
+@code {
+    [Parameter] public List<PackageItem>? PackageInfo { get; set; }
+
+    private BrowserDimension size { get; set; }
+    private string tableSize { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        size = await Service.GetDimensions();
+        tableSize = (size.Height - 200).ToString() + "px";
+    }
+}

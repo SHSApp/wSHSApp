@@ -1,0 +1,68 @@
+﻿@page "/"
+
+<PageTitle>Главная</PageTitle>
+<Container>
+    <Row>
+        <Column>
+            <BorderedItem>
+                <Jumbotron Background="Background.Light" Class="px-5">
+                    <JumbotronTitle Size="JumbotronTitleSize.Is4">Добро пожаловать в приложение!</JumbotronTitle>
+                    <JumbotronSubtitle>
+                        Здесь вы можете посмотреть всю интересующую Вас информацию. Для Вашего удобства она разбита на группы.
+                        Для того, чтобы просмотреть интересующую Вас информацию, просто перейдите к нужному пункту с помощью навигационного меню.
+                    </JumbotronSubtitle>
+                    <Button Color="Color.Primary" Type="ButtonType.Link" Size="Size.Large" To="/common">Перейти к просмотру</Button>
+                    <Divider></Divider>
+                    <Paragraph>
+                        <AuthorizeView>
+                            <Authorized>
+                                Вы авторизированы в приложении и Вам доступна раширенная информация.
+                            </Authorized>
+                            <NotAuthorized>
+                                Для просмотра расширенной и дополненной информации, пожалуйста, авторизируйтесь.
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </Paragraph>
+                </Jumbotron>
+            </BorderedItem>
+        </Column>
+    </Row>
+    <Row>
+        <Column ColumnSize="ColumnSize.Is6.OnFullHD.Is12.OnTablet">
+            <AuthorizeView>
+                <Authorized>
+                    <BorderedItem Class="mt-2">
+                        <StatisticChart />
+                    </BorderedItem>
+                </Authorized>
+                <NotAuthorized>
+                    <BorderedItem Class="mt-2">
+                        <Image Style="height:200px; width: 100%; object-fit: cover;" Source="/img/mainpage/1.jpg"></Image>
+                        <CardBody>
+                            <CardTitle Class="mt-2" Size="3" TextAlignment="TextAlignment.Center">
+                                Справочная информация
+                                <Button Color="Color.Primary" Type="ButtonType.Link">Посмотреть</Button>
+                            </CardTitle>
+                        </CardBody>
+                    </BorderedItem>
+                </NotAuthorized>
+            </AuthorizeView>
+        </Column>
+        <Column ColumnSize="ColumnSize.Is6.OnFullHD.Is12.OnTablet">
+            <BorderedItem Class="mt-2">
+                <Image Style="height:200px; width: 100%; object-fit: cover;" Source="/img/mainpage/2.jpg"></Image>
+                <CardBody>
+                    <CardTitle Class="mt-2" Size="3" TextAlignment="TextAlignment.Center">
+                        Запись на прием
+                        <Button Color="Color.Primary" Type="ButtonType.Link">Посмотреть</Button>
+                    </CardTitle>
+                </CardBody>
+            </BorderedItem>
+        </Column>
+    </Row>
+</Container>
+
+
+@code {
+
+}

@@ -1,0 +1,140 @@
+﻿<Container Style="max-width: 100%">
+    <Row>
+        <Column ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
+            <BorderedItem Class="mb-2">
+                <Image Source="@(!string.IsNullOrWhiteSpace(Prisoner?.PathToFotoFas) ? Prisoner.PathToFotoFas : "/img/no_photo.jpg")" Class="rounded" Style="width:100%" />
+            </BorderedItem>
+            <BorderedItem Class="mt-2">
+                <Image Source="@(!string.IsNullOrWhiteSpace(Prisoner?.PathToFotoProf) ? Prisoner.PathToFotoProf : "/img/no_photo.jpg")" Class="rounded" Style="width:100%" />
+            </BorderedItem>
+        </Column>
+        <Column ColumnSize="ColumnSize.Is3.OnFullHD.Is5.OnWidescreen.Is5.OnDesktop.Is12.OnTablet.Is12.OnMobile">
+            <Accordion>
+                <Collapse Visible="@mainVisible">
+                    <CollapseHeader>
+                        <Heading Size="HeadingSize.Is5">
+                            <Button Clicked="@(()=>{conditionsVisible = groupsVisible = false; mainVisible = !mainVisible;})">Общая информация</Button>
+                        </Heading>
+                    </CollapseHeader>
+                    <CollapseBody>
+                        <Maininfo Prisoner="Prisoner" />
+                    </CollapseBody>
+                </Collapse>
+                <Collapse Visible="@groupsVisible">
+                    <CollapseHeader>
+                        <Heading Size="HeadingSize.Is5">
+                            <Button Clicked="@(()=>{groupsVisible = !groupsVisible; mainVisible = conditionsVisible = false;})">Движения по отрядам</Button>
+                        </Heading>
+                    </CollapseHeader>
+                    <CollapseBody>
+                        @if (Prisoner?.MovingList?.Count > 0)
+                        {
+                            <Movinginfo Movings="Prisoner?.MovingList" />
+                        }
+                        else
+                        {
+                            <NoDataMini Message="Нет информации."/>
+                        }
+                    </CollapseBody>
+                </Collapse>
+                <Collapse Visible="@conditionsVisible">
+                    <CollapseHeader>
+                        <Heading Size="HeadingSize.Is5">
+                            <Button Clicked="@(()=>{conditionsVisible = !conditionsVisible; mainVisible = groupsVisible = false;})">Условия содержания</Button>
+                        </Heading>
+                    </CollapseHeader>
+                    <CollapseBody>
+                        @if (Prisoner?.ConditionList?.Count > 0)
+                        {
+                            <Conditioninfo Conditions="Prisoner?.ConditionList" />
+                        }
+                        else
+                        {
+                            <NoDataMini Message="Нет информации." />
+                        }
+                    </CollapseBody>
+                </Collapse>
+            </Accordion>
+        </Column>
+        <Column ColumnSize="ColumnSize.Is3.OnFullHD.Is5.OnWidescreen.Is5.OnDesktop.Is12.OnTablet.Is12.OnMobile">
+            <Accordion>
+                <Collapse Visible="@condemnationVisible">
+                    <CollapseHeader>
+                        <Heading Size="HeadingSize.Is5">
+                            <Button Clicked="@(()=>{condemnationVisible = !condemnationVisible; termsVisible = false;})">Осуждение</Button>
+                        </Heading>
+                    </CollapseHeader>
+                    <CollapseBody>
+                        <Condemnationinfo Prisoner="Prisoner" />
+                    </CollapseBody>
+                </Collapse>
+                <Collapse Visible="@termsVisible">
+                    <CollapseHeader>
+                        <Heading Size="HeadingSize.Is5">
+                            <Button Clicked="@(()=>{termsVisible = !termsVisible; condemnationVisible = false;})">Форточки</Button>
+                        </Heading>
+                    </CollapseHeader>
+                    <CollapseBody>
+                        <Termsinfo Prisoner="Prisoner" />
+                    </CollapseBody>
+                </Collapse>
+            </Accordion>
+        </Column>
+        <Column ColumnSize="ColumnSize.Is4.OnFullHD.Is12.OnWidescreen.Is12.OnDesktop.Is12.OnTablet.Is12.OnMobile">
+            <Accordion>
+                <Collapse Visible="@advancedVisible">
+                    <CollapseHeader>
+                        <Heading Size="HeadingSize.Is5">
+                            <Button Clicked="@(()=>{advancedVisible = !advancedVisible; releaseVisible = arrivalVisible = false;})">Дополнительно</Button>
+                        </Heading>
+                    </CollapseHeader>
+                    <CollapseBody>
+                        <Advancedinfo Prisoner="Prisoner" />
+                    </CollapseBody>
+                </Collapse>
+                <Collapse Visible="@releaseVisible">
+                    <CollapseHeader>
+                        <Heading Size="HeadingSize.Is5">
+                            <Button Clicked="@(()=>{advancedVisible = arrivalVisible = false; releaseVisible = !releaseVisible; })">Освобождение</Button>
+                        </Heading>
+                    </CollapseHeader>
+                    <CollapseBody>
+                        @if (Prisoner?.Release != null)
+                        {
+                            <Releaseinfo Release="Prisoner?.Release" />
+                        }
+                        else
+                        {
+                            <NoDataMini Message="Нет информации." />
+                        }
+                    </CollapseBody>
+                </Collapse>
+                <Collapse Visible="@arrivalVisible">
+                    <CollapseHeader>
+                        <Heading Size="HeadingSize.Is5">
+                            <Button Clicked="@(()=>{advancedVisible = releaseVisible = false; arrivalVisible = !arrivalVisible; })">Прибытие</Button>
+                        </Heading>
+                    </CollapseHeader>
+                    <CollapseBody>
+                        <Arrivalinfo Prisoner="Prisoner" />
+                    </CollapseBody>
+                </Collapse>
+            </Accordion>
+        </Column>
+    </Row>
+</Container>
+@code {
+    [Parameter] public CommonInfo? Prisoner { get; set; }
+
+    bool mainVisible = true;
+    bool conditionsVisible = false;
+    bool groupsVisible = false;
+
+    bool condemnationVisible = true;
+    bool termsVisible = false;
+
+    bool advancedVisible = true;
+    bool arrivalVisible = false;
+    bool releaseVisible = false;
+
+}

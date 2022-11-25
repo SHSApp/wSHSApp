@@ -1,0 +1,55 @@
+﻿@page "/debt"
+@implements IDisposable
+
+<PageTitle>Исполнительные листы</PageTitle>
+
+@if (DebtList == null)
+{
+        <Loading />
+}
+else if (DebtList.Count > 0)
+{
+    <DebtView DebtInfo="@DebtList" />
+}
+else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+{
+        <NoPrisoner />
+}
+else
+{
+        <NoData Message="Исполнительных листов не поступало." />
+}
+
+@code {
+    [Inject] private AppData appData { get; set; }
+    [Inject] private ExtraInfoService ExInfoService { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+    private List<DebtItem>? DebtList;
+
+    protected override void OnInitialized()
+    {
+        appData.OnChange += OnChangeHandler;
+    }
+
+    public void Dispose()
+    {
+        appData.OnChange -= OnChangeHandler;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        DebtList = await ExInfoService.GetDebtInfoAsync(appData.CurrentItemperson);
+    }
+
+    private async void OnChangeHandler()
+    {
+        if (Navigation.ToBaseRelativePath(Navigation.Uri) == "debt")
+        {
+            DebtList = null;
+            StateHasChanged();
+            DebtList = await ExInfoService.GetDebtInfoAsync(appData.CurrentItemperson);
+            StateHasChanged();
+        }
+    }
+}

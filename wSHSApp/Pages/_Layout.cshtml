@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace wSHSApp.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="_content/Blazorise/blazorise.css" rel="stylesheet" />
+    <link href="_content/Blazorise.Bootstrap5/blazorise.bootstrap5.css" rel="stylesheet" />
+    <link href="_content/Blazorise.SpinKit/blazorise.spinkit.css" rel="stylesheet" />
+    <link href="_content/Blazorise.LoadingIndicator/blazorise.loadingindicator.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="wSHSApp.styles.css" rel="stylesheet" />
+    
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+</head>
+<body>
+    @RenderBody()
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            Приложение не отвечает. Необходимо перезагрузить страницу.
+        </environment>
+        <environment include="Development">
+            Произошла какая-то хуйня, нужно разобраться.
+        </environment>
+        <a href="" class="reload">Перезагрузить</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script type="module" src="/js/tools.js"></script>
+    <script src="/js/chart.min.js"></script>
+    <script src="_framework/blazor.server.js"></script>    
+</body>
+</html>

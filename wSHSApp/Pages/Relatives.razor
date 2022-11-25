@@ -1,0 +1,56 @@
+﻿@page "/relatives"
+@attribute [Authorize]
+@implements IDisposable
+
+<PageTitle>Родственники</PageTitle>
+
+@if (RelativeList == null)
+{
+    <Loading />
+}
+else if (RelativeList.Count > 0)
+{
+    <RelativeView RelativeInfo="@RelativeList" />
+}
+else if ((appData?.CurrentItemperson == null) || (appData?.CurrentItemperson == ""))
+{
+    <NoPrisoner />
+}
+else
+{
+    <NoData Message="Информация не найдена." />
+}
+
+@code {
+    [Inject] private AppData? appData { get; set; }
+    [Inject] private AdditionalInfoService AddInfoService { get; set; }
+    [Inject] NavigationManager? Navigation { get; set; }
+    private List<RelativeItem>? RelativeList;
+
+    protected override void OnInitialized()
+    {
+        appData.OnChange += OnChangeHandler;
+    }
+
+    public void Dispose()
+    {
+        appData.OnChange -= OnChangeHandler;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        OnChangeHandler();
+    }
+
+    private async void OnChangeHandler()
+    {
+        if (Navigation?.ToBaseRelativePath(Navigation.Uri) == "relatives")
+        {
+            RelativeList = null;
+            StateHasChanged();
+            RelativeList = await AddInfoService.GetRelativesInfoAsync(appData?.CurrentItemperson);
+            StateHasChanged();
+        }
+    }
+}

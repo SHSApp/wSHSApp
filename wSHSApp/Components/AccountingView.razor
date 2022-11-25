@@ -1,0 +1,56 @@
+﻿<CardItem Title="Профилактический учет">
+    <Table Hoverable >
+        <TableHeader ThemeContrast="ThemeContrast.Light">
+            <TableRow>
+                <TableHeaderCell>#</TableHeaderCell>
+                <AuthorizeView>
+                    <TableHeaderCell>Учетная карточка</TableHeaderCell>
+                </AuthorizeView>
+                <TableHeaderCell>Дата постановки</TableHeaderCell>
+                <TableHeaderCell>Категория профилактического учета</TableHeaderCell>
+                <AuthorizeView>
+                    <TableHeaderCell>Кто закреплен</TableHeaderCell>
+                    <TableHeaderCell>Дата комиссии</TableHeaderCell>
+                    <TableHeaderCell>№ протокола постановки</TableHeaderCell>
+                </AuthorizeView>
+                <TableHeaderCell>Дата снятия</TableHeaderCell>
+                <AuthorizeView>
+                    <TableHeaderCell>№ протокола снятия</TableHeaderCell>
+                </AuthorizeView>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @for (int i = 0; i < AccountingInfo?.Count; ++i)
+            {
+                var index = (i + 1).ToString();
+                var accountingItem = AccountingInfo[i];
+                <TableRow @key="@index" Color="@GetColor(accountingItem)">
+                    <TableRowHeader>@index</TableRowHeader>
+                    <AuthorizeView>
+                        <TableRowCell>@accountingItem.AccountNumber</TableRowCell>
+                    </AuthorizeView>
+                    <TableRowCell>@accountingItem.StartDate</TableRowCell>
+                    <TableRowCell>@accountingItem.Category</TableRowCell>
+                    <AuthorizeView>
+                        <TableRowCell>@accountingItem.WhoIsFixed</TableRowCell>
+                        <TableRowCell>@accountingItem.DecisionDate</TableRowCell>
+                        <TableRowCell>@accountingItem.SettingProtocolNumber</TableRowCell>
+                    </AuthorizeView>
+                    <TableRowCell>@accountingItem.EndDate</TableRowCell>
+                    <AuthorizeView>
+                        <TableRowCell>@accountingItem.TakeOffProtocolNumber</TableRowCell>
+                    </AuthorizeView>
+                </TableRow>
+            }
+        </TableBody>
+    </Table>
+</CardItem>
+
+@code {
+    [Parameter] public List<AccountingItem>? AccountingInfo { get; set; }
+
+    private Color GetColor(AccountingItem item)
+    {
+        return item?.EndDate?.Trim(' ').Count() > 0 ? Color.Success : Color.Danger;
+    }
+}

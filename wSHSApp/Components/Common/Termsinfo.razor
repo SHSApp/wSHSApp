@@ -1,0 +1,50 @@
+﻿<Table Borderless Hoverable Narrow >
+    <TableBody>
+        <TableRow Color="@getWindowColor(Prisoner?.DateUDO)">
+            <TableRowHeader>Дата УДО</TableRowHeader>
+            <TableRowCell>@Prisoner?.DateUDO</TableRowCell>
+        </TableRow>
+        <TableRow Color="@getWindowColor(Prisoner?.DateUDO)">
+            <TableRowHeader>Часть до УДО</TableRowHeader>
+            <TableRowCell>@Prisoner?.PartUDO</TableRowCell>
+        </TableRow>
+        <TableRow Color="@getWindowColor(Prisoner?.DateKP)">
+            <TableRowHeader>Дата КП</TableRowHeader>
+            <TableRowCell>@Prisoner?.DateKP</TableRowCell>
+        </TableRow>
+        <TableRow Color="@getWindowColor(Prisoner?.DateKP)">
+            <TableRowHeader>Часть до КП</TableRowHeader>
+            <TableRowCell>@Prisoner?.PartKP</TableRowCell>
+        </TableRow>
+        <TableRow Color="@getWindowColor(Prisoner?.DateZMN)">
+            <TableRowHeader>Дата ИР</TableRowHeader>
+            <TableRowCell>@Prisoner?.DateZMN</TableRowCell>
+        </TableRow>
+        <TableRow Color="@getWindowColor(Prisoner?.DateZMN)">
+            <TableRowHeader>Часть до ИР</TableRowHeader>
+            <TableRowCell>@Prisoner?.PartZMN</TableRowCell>
+        </TableRow>
+        <TableRow Color="@getWindowColor(Prisoner?.DatePR)">
+            <TableRowHeader>Дата ПР</TableRowHeader>
+            <TableRowCell>@Prisoner?.DatePR</TableRowCell>
+        </TableRow>
+        <TableRow Color="@getWindowColor(Prisoner?.DatePR)">
+            <TableRowHeader>Часть до ПР</TableRowHeader>
+            <TableRowCell>@Prisoner?.PartPR</TableRowCell>
+        </TableRow>
+    </TableBody>
+</Table>
+
+@code {
+    [Parameter] public CommonInfo? Prisoner { get; set; }
+
+    private Color getWindowColor(string? dateIn)
+    {
+        if (!string.IsNullOrWhiteSpace(dateIn))
+        {
+            DateTime date = DateTime.Parse(dateIn);
+            if (date < DateTime.UtcNow) return Color.Success;
+        }
+        return Color.Default;
+    }
+}

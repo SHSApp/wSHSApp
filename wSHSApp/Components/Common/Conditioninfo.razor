@@ -1,0 +1,18 @@
+﻿<Table Hoverable Narrow Borderless>
+    <TableBody>
+        @for (int i = 0; i < Conditions?.Count; ++i)
+        {
+            var index = (i + 1).ToString();
+            var conditionItem = Conditions[i];
+            <TableRow @key="@index">
+                <TableRowHeader>@index</TableRowHeader>
+                <TableRowCell>@conditionItem?.Date</TableRowCell>
+                <TableRowCell>@conditionItem?.Condition</TableRowCell>
+            </TableRow>
+        }
+    </TableBody>
+</Table>
+
+@code {
+    [Parameter] public List<ConditionItem>? Conditions { get; set; }
+}

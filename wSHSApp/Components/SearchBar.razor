@@ -1,0 +1,59 @@
+﻿@using System.Data;
+@using wSHSApp.Models;
+
+@inject AppData appData;
+
+<Div Class="container" Style="max-width: 100%">
+
+<Div Class="row justify-content-center">
+    <Div Class="col-sm-12 col-md-10 col-xl-11 col-xxl-11">       
+        <Autocomplete TItem="AkusPrisoner"
+                      TValue="string"
+                      Data="@zeks"
+                      TextField="@(( item ) => (item.Surname+" "+item.Name+" "+item.Lastname+", "+item.Birthday+" года рождения" ))"
+                      ValueField="@(( item ) => item.Itemperson)"
+                      @bind-SelectedValue="@appData.CurrentItemperson"
+                      @bind-SelectedText="selectedAutoCompleteText"
+                      Filter="AutocompleteFilter.StartsWith"
+                      Placeholder="Введите фамилию осужденного..."
+                      FreeTyping
+                      MaxMenuHeight="500px"
+                      CustomFilter="@(( item, searchValue ) => item.Surname.StartsWith( searchValue, StringComparison.CurrentCultureIgnoreCase ))">
+            <NotFoundContent> Пожалуйста простите... @context не найден! :( </NotFoundContent>
+            <ItemContent>
+                <Div Flex="Flex.InlineFlex.JustifyContent.Between" Width="Width.Is100">
+                    <Heading Margin="Margin.Is2.FromBottom">@(context.Item.Surname + " " + context.Item.Name + " " + context.Item.Lastname)</Heading>
+                        <Small>@(AkusService.GetGroup(context.Item.GroupId))</Small>
+                    </Div>
+                    <Paragraph Margin="Margin.Is2.FromBottom">@("Дата рождения: " + context.Item.Birthday)</Paragraph>
+                </ItemContent>
+            </Autocomplete>
+        </Div>
+        <Div Class="col-sm-12 col-md-1 col-xl-1" >
+                <Button Clicked="OnChange" Class="btn btn-secondary">Сброс</Button>
+        </Div>
+    </Div>
+    </Div>
+
+    @code {
+
+    [Inject] NavigationManager Navigation { get; set; }
+
+    public List<AkusPrisoner>? zeks;
+
+    protected override void OnInitialized()
+    {
+        zeks = AkusConnect.Names;
+    }
+
+    async void OnChange(object value)
+    {
+        await Task.Run(()=>selectedAutoCompleteText = null);
+        await InvokeAsync(() => StateHasChanged());
+        appData.CurrentItemperson = null;
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    public static string? selectedAutoCompleteText { get; set; }
+
+}

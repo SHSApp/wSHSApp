@@ -1,0 +1,47 @@
+﻿@page
+@model RoleModel
+@{
+    ViewData["Title"] = "Управление группой";
+    ViewData["ActivePage"] = ManageNavPages.Role;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="role-form" method="post">
+            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3 input-group">
+                <input asp-for="Username" class="form-control" disabled />
+                <div class="input-group-append">
+                    <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
+                </div>
+                <label asp-for="Username" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                @if (HttpContext.User.IsInRole("Admin"))
+                {
+                    <select asp-for="Input.Role" class="form-control" aria-required="true" asp-items="@Model.Roles">
+                    </select>
+                } else
+                {
+                    <input asp-for="@Model.Role" class="form-control" disabled />
+                }                
+                <label asp-for="Input.Role" class="form-label"></label>
+                <span asp-validation-for="Input.Role" class="text-danger"></span>
+            </div>
+            @if (HttpContext.User.IsInRole("Admin"))
+            {
+                <button id="change-email-button" type="submit" asp-page-handler="ChangeRole" class="w-100 btn btn-lg btn-primary">Изменить группу</button>
+            } 
+            else
+            {
+                <button id="change-email-button" type="submit" asp-page-handler="ChangeRole" class="w-100 btn btn-lg btn-primary" disabled>Изменить группу</button>
+            }            
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

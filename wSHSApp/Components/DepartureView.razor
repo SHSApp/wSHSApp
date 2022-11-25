@@ -1,0 +1,39 @@
+﻿<CardItem Title="Убытия и прибытия">
+    <Table Hoverable>
+        <TableHeader ThemeContrast="ThemeContrast.Light">
+            <TableRow>
+                <TableHeaderCell>#</TableHeaderCell>
+                <TableHeaderCell>Статус</TableHeaderCell>
+                <TableHeaderCell>Тип убытия</TableHeaderCell>
+                <TableHeaderCell>Дата убытия</TableHeaderCell>
+                <TableHeaderCell>Куда убыл</TableHeaderCell>
+                <TableHeaderCell>Регион убытия</TableHeaderCell>
+                <TableHeaderCell>Дата прибытия</TableHeaderCell>
+                <TableHeaderCell>Откуда прибыл</TableHeaderCell>
+                <TableHeaderCell>Регион прибытия</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @for (int i = 0; i < DepartureInfo?.Count; ++i)
+            {
+                var index = (i + 1).ToString();
+                var departureItem = DepartureInfo[i];
+                <TableRow @key="@index" Color="@(departureItem.CurrentStatus ? Color.Danger : Color.Default)">
+                    <TableRowHeader>@index</TableRowHeader>
+                    <TableRowCell>@(departureItem.CurrentStatus ? "Убыл" : "Вернулся")</TableRowCell>
+                        <TableRowCell>@departureItem.Type</TableRowCell>
+                        <TableRowCell>@departureItem.DepartureDate</TableRowCell>
+                        <TableRowCell>@departureItem.DepartureInstitution</TableRowCell>
+                        <TableRowCell>@departureItem.DepartureRegion</TableRowCell>
+                        <TableRowCell>@departureItem.ArrivalDate</TableRowCell>
+                        <TableRowCell>@departureItem.ArrivalInstitution</TableRowCell>
+                        <TableRowCell>@departureItem.ArrivalRegion</TableRowCell>
+                    </TableRow>
+            }
+        </TableBody>
+    </Table>
+</CardItem>
+
+@code {
+    [Parameter] public List<DepartureItem>? DepartureInfo { get; set; }
+}

@@ -1,0 +1,87 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <img src="img/wkus.png" class="img-fluid" />
+        <a class="navbar-brand" href="">Веб-АКУС</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="common" Match="NavLinkMatch.All">
+                <span class="oi oi-grid-three-up" aria-hidden="true"></span> Основное
+            </NavLink>
+        </div>
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="award">
+                <span class="oi oi-plus" aria-hidden="true"></span> Поощрения
+            </NavLink>
+        </div>
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="discipline">
+                <span class="oi oi-minus" aria-hidden="true"></span> Взыскания
+            </NavLink>
+        </div>
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="packages">
+                <span class="oi oi-box" aria-hidden="true"></span> Передачи
+            </NavLink>
+        </div>
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="meetings">
+                <span class="oi oi-people" aria-hidden="true"></span> Свидания
+            </NavLink>
+        </div>
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="post">
+                <span class="oi oi-envelope-closed" aria-hidden="true"></span> Письма
+            </NavLink>
+        </div>
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="debt">
+                <span class="oi oi-calculator" aria-hidden="true"></span> Иски
+            </NavLink>
+        </div>
+        <div class="nav-item px-2">
+            <NavLink class="nav-link" href="accounting">
+                <span class="oi oi-book" aria-hidden="true"></span> Профучет
+            </NavLink>
+        </div>
+        <AuthorizeView>
+            <div class="nav-item px-2">
+                <NavLink class="nav-link" href="documents">
+                    <span class="oi oi-document" aria-hidden="true"></span> Документы
+                </NavLink>
+            </div>
+            <div class="nav-item px-2">
+                <NavLink class="nav-link" href="relatives">
+                    <span class="oi oi-person" aria-hidden="true"></span> Родственники
+                </NavLink>
+            </div>
+            <div class="nav-item px-2">
+                <NavLink class="nav-link" href="convictions">
+                    <span class="oi oi-script" aria-hidden="true"></span> Судимости
+                </NavLink>
+            </div>
+            <div class="nav-item px-2">
+                <NavLink class="nav-link" href="departures">
+                    <span class="oi oi-transfer" aria-hidden="true"></span> Убытия
+                </NavLink>
+            </div>
+        </AuthorizeView>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

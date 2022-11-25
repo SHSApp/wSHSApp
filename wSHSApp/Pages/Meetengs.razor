@@ -1,0 +1,60 @@
+﻿@page "/meetings"
+@implements IDisposable
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Свидания</PageTitle>
+
+@if (MeetingList == null)
+{
+    <Loading />
+}
+else if (MeetingList.Count > 0)
+{
+    <MeetingView MeetingInfo="@MeetingList" />
+}
+else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+{
+    <NoPrisoner />
+}
+else
+{
+    <NoData Message="Свидания не предоставлялись." />
+}
+
+@code {
+    [Inject] private AppData appData { get; set; }
+    [Inject] private ExtraInfoService ExInfoService { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+    private List<MeetingItem>? MeetingList;
+
+    protected override void OnInitialized()
+    {
+        appData.OnChange += OnChangeHandler;
+    }
+
+    public void Dispose()
+    {
+        appData.OnChange -= OnChangeHandler;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var auth = authState.User.Identity.IsAuthenticated ? true : false;
+        MeetingList = await ExInfoService.GetMeetingsInfoAsync(appData.CurrentItemperson, auth);
+    }
+
+    private async void OnChangeHandler()
+    {
+        if (Navigation.ToBaseRelativePath(Navigation.Uri) == "meetings")
+        {
+            MeetingList = null;
+            StateHasChanged();
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var auth = authState.User.Identity.IsAuthenticated ? true : false;
+            MeetingList = await ExInfoService.GetMeetingsInfoAsync(appData.CurrentItemperson, auth);
+            StateHasChanged();
+        }
+    }
+}

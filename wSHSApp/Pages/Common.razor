@@ -1,0 +1,64 @@
+﻿@page "/common"
+@implements IDisposable
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Общая информация</PageTitle>
+
+@if (Zek == null)
+{
+    <Loading />
+}
+else if (Zek.IsNotEmpty)
+{
+    <AuthorizeView>
+        <Authorized>
+            <CommonView Prisoner="Zek" />
+        </Authorized>
+        <NotAuthorized>
+            <InfoView2 Prisoner="Zek" />
+        </NotAuthorized>
+    </AuthorizeView>
+}
+else
+{
+    <NoPrisoner />
+}
+
+@code {
+
+    [Inject] private AppData? appData { get; set; }
+    [Inject] private CommonInfoService? PrizonerInfoService { get; set; }
+    [Inject] NavigationManager? Navigation { get; set; }
+
+    private CommonInfo? Zek;
+
+    protected override void OnInitialized()
+    {
+        appData.OnChange += OnChangeHandler;
+    }
+
+    public void Dispose()
+    {
+        appData.OnChange -= OnChangeHandler;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        OnChangeHandler();
+    }
+
+    private async void OnChangeHandler() //(object sender, EventArgs e)
+    {
+        if (Navigation?.ToBaseRelativePath(Navigation.Uri) == "common")
+        {
+            Zek = null;
+            StateHasChanged();
+            //Zek = await PrizonerInfoService.GetCommonInfoAsync("20582", true);
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var auth = authState.User.Identity.IsAuthenticated ? true : false;
+            Zek = await PrizonerInfoService.GetCommonInfoAsync(appData?.CurrentItemperson, auth);
+            StateHasChanged();
+        }
+    }
+}

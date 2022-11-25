@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AkusUser> SignInManager
+@inject UserManager<AkusUser> UserManager
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Вы вошли как: @(User?.FindFirst("firstname")?.Value + " " + User?.FindFirst("surname")?.Value)</a>
+        </li>
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="btn btn-outline-light" role="button" asp-area="Identity" asp-page="/Account/Register">Новый пользователь</a>&nbsp
+            </li>
+        }
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/" method="post">
+                <button type="submit" class="btn btn-primary">Выйти</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="btn btn-primary" role="button" asp-area="Identity" asp-page="/Account/Login">Войти</a>
+        </li>
+    }
+</ul>

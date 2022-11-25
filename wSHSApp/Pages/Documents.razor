@@ -1,0 +1,56 @@
+﻿@page "/documents"
+@attribute [Authorize]
+@implements IDisposable
+
+<PageTitle>Документы</PageTitle>
+
+@if (DocumentList == null)
+{
+    <Loading />
+}
+else if (DocumentList.Count > 0)
+{
+    <DocumentView DocumentInfo="@DocumentList" />
+}
+else if ((appData?.CurrentItemperson == null) || (appData?.CurrentItemperson == ""))
+{
+    <NoPrisoner />
+}
+else
+{
+    <NoData Message="Документов не найдено." />
+}
+
+@code {
+    [Inject] private AppData? appData { get; set; }
+    [Inject] private AdditionalInfoService AddInfoService { get; set; }
+    [Inject] NavigationManager? Navigation { get; set; }
+    private List<DocumentItem>? DocumentList;
+
+    protected override void OnInitialized()
+    {
+        appData.OnChange += OnChangeHandler;
+    }
+
+    public void Dispose()
+    {
+        appData.OnChange -= OnChangeHandler;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        OnChangeHandler();
+    }
+
+    private async void OnChangeHandler()
+    {
+        if (Navigation?.ToBaseRelativePath(Navigation.Uri) == "documents")
+        {
+            DocumentList = null;
+            StateHasChanged();
+            DocumentList = await AddInfoService.GetDocumentsInfoAsync(appData?.CurrentItemperson);
+            StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,58 @@
+﻿<Bar Breakpoint="Breakpoint.Desktop" ThemeContrast="ThemeContrast.Dark">
+    <BarBrand>
+    </BarBrand>
+    <BarToggler Class="mx-3" />
+    <BarMenu>
+        <BarStart>
+            <BarItem>
+                <BarLink To="">Главная</BarLink>
+            </BarItem>
+            <AuthorizeView>
+                <Authorized>
+                    <BarItem>
+                        <BarDropdown>
+                            <BarDropdownToggle>Записи на прием</BarDropdownToggle>
+                            <BarDropdownMenu>
+                                <BarDropdownItem>В медицинскую часть</BarDropdownItem>
+                                <BarDropdownDivider />
+                                <BarDropdownItem>К начальнику учреждения</BarDropdownItem>
+                            </BarDropdownMenu>
+                        </BarDropdown>
+                    </BarItem>
+                </Authorized>
+                <NotAuthorized>
+                    <BarItem>
+                        <BarDropdown>
+                            <BarDropdownToggle>Записаться на прием</BarDropdownToggle>
+                            <BarDropdownMenu>
+                                <BarDropdownItem>В медицинскую часть</BarDropdownItem>
+                                <BarDropdownDivider />
+                                <BarDropdownItem>К начальнику учреждения</BarDropdownItem>
+                            </BarDropdownMenu>
+                        </BarDropdown>
+                    </BarItem>
+                    <BarItem>
+                        <BarDropdown>
+                            <BarDropdownToggle>Справочная информация</BarDropdownToggle>
+                            <BarDropdownMenu>
+                                <BarDropdownItem>Образцы заявлений</BarDropdownItem>
+                                <BarDropdownDivider />
+                                <BarDropdownItem>График работы столовой</BarDropdownItem>
+                                <BarDropdownItem>График работы БПК</BarDropdownItem>
+                            </BarDropdownMenu>
+                        </BarDropdown>
+                    </BarItem>
+                </NotAuthorized>
+            </AuthorizeView>            
+        </BarStart>
+        <BarEnd>
+            <BarItem Class="px-4">
+                <LoginDisplay />
+            </BarItem>
+        </BarEnd>
+    </BarMenu>
+</Bar>
+
+@code {
+
+}
