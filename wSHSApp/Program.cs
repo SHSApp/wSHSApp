@@ -19,10 +19,12 @@ using wSHSApp.Areas.Identity.Data;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDbConnectionString") ?? throw new InvalidOperationException("Connection string not found.");
 var akusConnectionPath = builder.Configuration.GetConnectionString("AkusDbPath") ?? throw new InvalidOperationException("AKUS Database path not found.");
+var recordsConnectionString = builder.Configuration.GetConnectionString("RecordsDbConnectionString") ?? throw new InvalidOperationException("Connection string not found.");
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
+builder.Services.AddDbContext<RecordsDbContext>(options => options.UseSqlite(recordsConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddIdentity<AkusUser, IdentityRole>(options =>
 {

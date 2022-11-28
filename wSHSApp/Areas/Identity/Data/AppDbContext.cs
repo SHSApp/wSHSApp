@@ -15,7 +15,7 @@ public class AppDbContext : IdentityDbContext<AkusUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.HasDefaultSchema("Identity");
+        //builder.HasDefaultSchema("Identity");
         builder.Entity<AkusUser>(entity =>
         {
             entity.ToTable(name: "User");
