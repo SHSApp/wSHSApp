@@ -16,7 +16,7 @@
                         Сформировать отчет
                     </DropdownToggle>
                     <DropdownMenu>
-                        <DropdownItem>Справка по корреспонденции</DropdownItem>
+                        <DropdownItem Clicked="@ShowInfoMessage">Справка по корреспонденции</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
             </Column>
@@ -30,6 +30,8 @@
     [Parameter] public string? Text { get; set; }
     [Parameter] public bool checkedValue { get; set; } = false;
 
+    [Inject] IMessageService? MessageService { get; set; }
+
     Task OnCheckedValueChanged(bool value)
     {
         checkedValue = value;
@@ -37,5 +39,8 @@
         return Task.CompletedTask;
     }
 
-    
+    Task ShowInfoMessage()
+    {
+        return MessageService.Info("В настоящее время подсистема макросов в разработке.", "Web-AKUS");
+    }
 }

@@ -66,6 +66,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Reports\" />
   </ItemGroup>
 
   <ItemGroup>
