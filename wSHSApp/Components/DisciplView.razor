@@ -22,7 +22,7 @@
         <TableBody>
             @for (int i = 0; i < DisciplInfo?.Count; ++i)
             {
-                var index = (i + 1).ToString();
+                var index = isReverse ? (DisciplInfo.Count - i).ToString() : (i + 1).ToString(); ;
                 var disciplItem = DisciplInfo[i];
                 <TableRow @key="@index" Color="@(disciplItem.Penalty.Contains("ШИЗО")?Color.Warning:disciplItem.Penalty.Contains("ПКТ")?Color.Danger:Color.Default)">
                     <TableRowHeader>@index</TableRowHeader>
@@ -42,6 +42,7 @@
             }
         </TableBody>
     </Table>
+    <Footer OnCheckCallback="s => {DisciplInfo?.Reverse(); isReverse = s; }" Text="@("Всего элементов: " + DisciplInfo?.Count)" />
 </CardItem>
 
 @code {
@@ -53,6 +54,8 @@
     protected override async Task OnInitializedAsync()
     {
         size = await Service.GetDimensions();
-        tableSize = (size.Height - 200).ToString() + "px";
+        tableSize = (size.Height - 250).ToString() + "px";
     }
+
+    private bool isReverse = false;
 }

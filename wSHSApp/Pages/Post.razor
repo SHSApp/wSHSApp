@@ -19,7 +19,7 @@
             {
                 <BorderedItem>
                     <PetitionView PetitionInfo="@PetitionList" />
-                </BorderedItem>
+                </BorderedItem>               
             }
             else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
             {
@@ -112,11 +112,11 @@
                 LetterList = null;
                 StateHasChanged();
                 var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                var auth = authState.User.Identity.IsAuthenticated ? true : false;
-                LetterList = await ExInfoService.GetLettersInfoAsync(appData.CurrentItemperson, auth);
+                LetterList = await ExInfoService.GetLettersInfoAsync(appData.CurrentItemperson, authState.User.Identity.IsAuthenticated);
                 StateHasChanged();
             }
 
         }
     }
+
 }

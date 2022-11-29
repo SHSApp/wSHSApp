@@ -1,0 +1,41 @@
+﻿<BorderedItem Class="mt-1">
+    <Row>
+        <Column ColumnSize="ColumnSize.Is4.OnFullHD.Is12.OnTablet">
+            <RadioGroup TValue="bool" Name="sort" Buttons CheckedValue="@checkedValue" CheckedValueChanged="@OnCheckedValueChanged">
+                <Radio Value="@false">По возрастанию <span class="oi oi-sort-ascending" aria-hidden="true"></span></Radio>
+                <Radio Value="@true"><span class="oi oi-sort-descending" aria-hidden="true"></span> По убыванию</Radio>
+            </RadioGroup>
+        </Column>
+        <Column ColumnSize="ColumnSize.Is5.OnFullHD.Is12.OnTablet">
+            <p class="p-middle">@Text</p>
+        </Column>
+        <AuthorizeView>
+            <Column ColumnSize="ColumnSize.Is3.OnFullHD.Is12.OnTablet">
+                <Dropdown Position="Position.Absolute.End">
+                    <DropdownToggle Color="Color.Primary">
+                        Сформировать отчет
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        <DropdownItem>Справка по корреспонденции</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+            </Column>
+        </AuthorizeView>
+    </Row>
+</BorderedItem>
+
+@code {
+    [Parameter] public EventCallback<bool> OnCheckCallback { get; set; }
+    [Parameter] public EventCallback? OnClickCallback { get; set; }
+    [Parameter] public string? Text { get; set; }
+    [Parameter] public bool checkedValue { get; set; } = false;
+
+    Task OnCheckedValueChanged(bool value)
+    {
+        checkedValue = value;
+        OnCheckCallback.InvokeAsync(value);
+        return Task.CompletedTask;
+    }
+
+    
+}

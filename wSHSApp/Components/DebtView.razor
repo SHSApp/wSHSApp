@@ -18,7 +18,7 @@
         <TableBody>
             @for (int i = 0; i < DebtInfo?.Count; ++i)
             {
-                var index = (i + 1).ToString();
+                var index = isReverse ? (DebtInfo.Count - i).ToString() : (i + 1).ToString();
                 var debtItem = DebtInfo[i];
                 <TableRow @key="@index" Color="@GetColor(debtItem)">
                     <TableRowHeader>@index</TableRowHeader>
@@ -34,6 +34,7 @@
             }
         </TableBody>
     </Table>
+    <Footer OnCheckCallback="s => { DebtInfo?.Reverse(); isReverse = s; }" Text="@("Всего элементов: " + DebtInfo?.Count)" />
 </CardItem>
 
 @code {
@@ -52,6 +53,8 @@
     protected override async Task OnInitializedAsync()
     {
         size = await Service.GetDimensions();
-        tableSize = (size.Height - 200).ToString() + "px";
+        tableSize = (size.Height - 250).ToString() + "px";
     }
+
+    private bool isReverse = false;
 }

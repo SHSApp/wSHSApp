@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -35,6 +37,15 @@ namespace wSHSApp.Data
             return five;
         }
 
+        public static List<TItem> ReverseArray<TItem>(List<TItem> src)
+        {
+            var dst = new List<TItem>();
+            for (int i = src.Count - 1; i > -1; i--)
+            {
+                dst.Add(src[i]);
+            }
+            return dst;
+        }
         public static string GetDecl(int num, string one, string two)
         {
             return GetDecl(num, one, two, two);

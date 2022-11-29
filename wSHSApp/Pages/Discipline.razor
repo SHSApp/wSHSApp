@@ -42,8 +42,7 @@ else
     {
         await base.OnInitializedAsync();
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var auth = authState.User.Identity.IsAuthenticated ? true : false;
-        DisciplList = await ExInfoService.GetDisсiplInfoAsync(appData.CurrentItemperson, auth);
+        DisciplList = await ExInfoService.GetDisсiplInfoAsync(appData.CurrentItemperson, authState.User.Identity.IsAuthenticated);
     }
 
     private async void OnChangeHandler() 
@@ -53,8 +52,7 @@ else
             DisciplList = null;
             StateHasChanged();
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var auth = authState.User.Identity.IsAuthenticated ? true : false;
-            DisciplList = await ExInfoService.GetDisсiplInfoAsync(appData.CurrentItemperson, auth);
+            DisciplList = await ExInfoService.GetDisсiplInfoAsync(appData.CurrentItemperson, authState.User.Identity.IsAuthenticated);
             StateHasChanged();
         }       
     }

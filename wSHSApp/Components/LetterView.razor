@@ -14,9 +14,9 @@
         </TableRow>
     </TableHeader>
     <TableBody>
-        @for (int i = LetterInfo.Count - 1; i > -1 ; --i)
+        @for (int i = 0; i < LetterInfo?.Count; i++)
         {
-            var index = (i + 1).ToString();
+            var index = isReverse ? (LetterInfo.Count - i).ToString() : (i + 1).ToString();
             var letterItem = LetterInfo[i];
             <TableRow @key="@index">
                 <TableRowHeader>@index</TableRowHeader>
@@ -31,6 +31,7 @@
         }
     </TableBody>
 </Table>
+<Footer OnCheckCallback="s => { LetterInfo?.Reverse(); isReverse = s; }" Text="@("Всего элементов: " + LetterInfo?.Count)" />
 
 @code {
     [Parameter] public List<LetterItem>? LetterInfo { get; set; }
@@ -41,6 +42,8 @@
     protected override async Task OnInitializedAsync()
     {
         size = await Service.GetDimensions();
-        tableSize = (size.Height - 200).ToString() + "px";
+        tableSize = (size.Height - 250).ToString() + "px";
     }
+
+    private bool isReverse = false;
 }

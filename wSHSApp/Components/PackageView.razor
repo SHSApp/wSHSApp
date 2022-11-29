@@ -16,9 +16,9 @@
             </TableRow>
         </TableHeader>
         <TableBody>
-            @for (int i = PackageInfo.Count - 1; i > -1; --i)
+            @for (int i = 0; i < PackageInfo?.Count; i++)
             {
-                var index = (i + 1).ToString();
+                var index = isReverse ? (PackageInfo.Count - i).ToString() : (i + 1).ToString();
                 var packageItem = PackageInfo[i];
                 <TableRow @key="@index" Color="@(packageItem.Note.Contains("Медиц")?Color.Info:packageItem.Note.Contains("поощр")?Color.Success:Color.Default)">
                     <TableRowHeader>@index</TableRowHeader>
@@ -34,6 +34,7 @@
             }
         </TableBody>
     </Table>
+    <Footer OnCheckCallback="s => { PackageInfo?.Reverse(); isReverse = s; }" Text="@("Всего элементов: " + PackageInfo?.Count)" />
 </CardItem>
 
 @code {
@@ -45,6 +46,8 @@
     protected override async Task OnInitializedAsync()
     {
         size = await Service.GetDimensions();
-        tableSize = (size.Height - 200).ToString() + "px";
+        tableSize = (size.Height - 250).ToString() + "px";
     }
+
+    private bool isReverse = false;
 }

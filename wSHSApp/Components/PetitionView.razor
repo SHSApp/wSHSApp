@@ -11,9 +11,9 @@
         </TableRow>
     </TableHeader>
     <TableBody>
-        @for (int i = PetitionInfo.Count - 1; i > -1; --i)
+        @for (int i = 0; i < PetitionInfo?.Count; i++)
         {
-            var index = (i + 1).ToString();
+            var index = isReverse ? (PetitionInfo.Count - i).ToString() : (i + 1).ToString();
             var petitionItem = PetitionInfo[i];
             <TableRow @key="@index">
                 <TableRowHeader>@index</TableRowHeader>
@@ -25,6 +25,7 @@
         }
     </TableBody>
 </Table>
+<Footer OnCheckCallback="s => { PetitionInfo?.Reverse(); isReverse = s; }" Text="@("Всего элементов: " + PetitionInfo?.Count)" />
 
 @code {
     [Parameter] public List<PetitionItem>? PetitionInfo { get; set; }
@@ -35,6 +36,8 @@
     protected override async Task OnInitializedAsync()
     {
         size = await Service.GetDimensions();
-        tableSize = (size.Height - 200).ToString() + "px";
+        tableSize = (size.Height - 250).ToString() + "px";
     }
+
+    private bool isReverse = false;
 }

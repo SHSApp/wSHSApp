@@ -16,6 +16,11 @@ a, .btn-link {
     color: #0071c1;
 }
 
+.p-middle {
+    margin-top: 0.4rem;
+    margin-bottom: 0.1rem;
+}
+    
 .btn-primary {
     color: #fff;
     background-color: #1b6ec2;

@@ -41,8 +41,7 @@ else
     {
         await base.OnInitializedAsync();
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var auth = authState.User.Identity.IsAuthenticated ? true : false;
-        MeetingList = await ExInfoService.GetMeetingsInfoAsync(appData.CurrentItemperson, auth);
+        MeetingList = await ExInfoService.GetMeetingsInfoAsync(appData.CurrentItemperson, authState.User.Identity.IsAuthenticated);
     }
 
     private async void OnChangeHandler()
@@ -52,8 +51,7 @@ else
             MeetingList = null;
             StateHasChanged();
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var auth = authState.User.Identity.IsAuthenticated ? true : false;
-            MeetingList = await ExInfoService.GetMeetingsInfoAsync(appData.CurrentItemperson, auth);
+            MeetingList = await ExInfoService.GetMeetingsInfoAsync(appData.CurrentItemperson, authState.User.Identity.IsAuthenticated);
             StateHasChanged();
         }
     }

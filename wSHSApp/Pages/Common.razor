@@ -56,8 +56,7 @@ else
             StateHasChanged();
             //Zek = await PrizonerInfoService.GetCommonInfoAsync("20582", true);
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var auth = authState.User.Identity.IsAuthenticated ? true : false;
-            Zek = await PrizonerInfoService.GetCommonInfoAsync(appData?.CurrentItemperson, auth);
+            Zek = await PrizonerInfoService.GetCommonInfoAsync(appData?.CurrentItemperson, authState.User.Identity.IsAuthenticated);
             StateHasChanged();
         }
     }

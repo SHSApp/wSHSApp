@@ -1,5 +1,7 @@
-﻿<CardItem Title="Родственники в личном деле">
-    <Table Hoverable>
+﻿@inject BrowserService Service
+
+<CardItem Title="Родственники в личном деле">
+    <Table Hoverable FixedHeader FixedHeaderTableHeight="@tableSize" FixedHeaderTableMaxHeight="@tableSize">
         <TableHeader ThemeContrast="ThemeContrast.Light">
             <TableRow>
                 <TableHeaderCell>#</TableHeaderCell>
@@ -14,7 +16,7 @@
         <TableBody>
             @for (int i = 0; i < RelativeInfo?.Count; ++i)
             {
-                var index = (i + 1).ToString();
+                var index = isReverse ? (RelativeInfo.Count - i).ToString() : (i + 1).ToString();
                 var relativeItem = RelativeInfo[i];
                 <TableRow @key="@index">
                     <TableRowHeader>@index</TableRowHeader>
@@ -28,8 +30,20 @@
             }
         </TableBody>
     </Table>
+    <Footer OnCheckCallback="s => { RelativeInfo?.Reverse(); isReverse = s; }" Text="@("Всего элементов: " + RelativeInfo?.Count)" />
 </CardItem>
 
 @code {
     [Parameter] public List<RelativeItem>? RelativeInfo { get; set; }
+
+    private BrowserDimension size { get; set; }
+    private string tableSize { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        size = await Service.GetDimensions();
+        tableSize = (size.Height - 250).ToString() + "px";
+    }
+
+    private bool isReverse = false;
 }

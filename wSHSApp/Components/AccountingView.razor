@@ -1,5 +1,7 @@
-﻿<CardItem Title="Профилактический учет">
-    <Table Hoverable >
+﻿@inject BrowserService Service
+
+<CardItem Title="Профилактический учет">
+    <Table Hoverable FixedHeader FixedHeaderTableHeight="@tableSize" FixedHeaderTableMaxHeight="@tableSize">
         <TableHeader ThemeContrast="ThemeContrast.Light">
             <TableRow>
                 <TableHeaderCell>#</TableHeaderCell>
@@ -22,7 +24,7 @@
         <TableBody>
             @for (int i = 0; i < AccountingInfo?.Count; ++i)
             {
-                var index = (i + 1).ToString();
+                var index = isReverse ? (AccountingInfo.Count - i).ToString() : (i + 1).ToString();
                 var accountingItem = AccountingInfo[i];
                 <TableRow @key="@index" Color="@GetColor(accountingItem)">
                     <TableRowHeader>@index</TableRowHeader>
@@ -44,6 +46,7 @@
             }
         </TableBody>
     </Table>
+    <Footer OnCheckCallback="s => { AccountingInfo?.Reverse(); isReverse = s; }" Text="@("Всего элементов: " + AccountingInfo.Count)" />
 </CardItem>
 
 @code {
@@ -53,4 +56,15 @@
     {
         return item?.EndDate?.Trim(' ').Count() > 0 ? Color.Success : Color.Danger;
     }
+
+    private BrowserDimension size { get; set; }
+    private string tableSize { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        size = await Service.GetDimensions();
+        tableSize = (size.Height - 250).ToString() + "px";
+    }
+
+    private bool isReverse = false;
 }

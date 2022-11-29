@@ -52,8 +52,7 @@ else
             AccountingList = null;
             StateHasChanged();
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var auth = authState.User.Identity.IsAuthenticated ? true : false;
-            AccountingList = await ExInfoService.GetAccountingInfoAsync(appData.CurrentItemperson, auth);
+            AccountingList = await ExInfoService.GetAccountingInfoAsync(appData.CurrentItemperson, authState.User.Identity.IsAuthenticated);
             StateHasChanged();
         }
     }

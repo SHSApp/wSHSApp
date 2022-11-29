@@ -13,7 +13,7 @@
         <TableBody>
             @for (int i = 0; i < AwardInfo?.Count; ++i)
             {
-                var index = (i + 1).ToString();
+                var index = isReverse ? (AwardInfo.Count - i).ToString() : (i + 1).ToString(); ;
                 var awardItem = AwardInfo[i];
                 <TableRow @key="@index">
                     <TableRowHeader>@index</TableRowHeader>
@@ -24,6 +24,7 @@
             }
         </TableBody>
     </Table>
+    <Footer OnCheckCallback="s => { AwardInfo?.Reverse(); isReverse = s; }" Text="@("Всего элементов: " + AwardInfo?.Count)" />
 </CardItem>
 
 @code {
@@ -35,6 +36,8 @@
     protected override async Task OnInitializedAsync()
     {
         size = await Service.GetDimensions();
-        tableSize = (size.Height - 200).ToString() + "px";
+        tableSize = (size.Height - 250).ToString() + "px";
     }
+
+    private bool isReverse = false;
 }

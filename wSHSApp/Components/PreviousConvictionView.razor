@@ -1,5 +1,7 @@
-﻿<CardItem Title="Прежние судимости">
-    <Table Hoverable>
+﻿@inject BrowserService Service
+
+<CardItem Title="Прежние судимости">
+    <Table Hoverable FixedHeader FixedHeaderTableHeight="@tableSize" FixedHeaderTableMaxHeight="@tableSize">
         <TableHeader ThemeContrast="ThemeContrast.Light">
             <TableRow>
                 <TableHeaderCell>#</TableHeaderCell>
@@ -17,7 +19,7 @@
         <TableBody>
             @for (int i = 0; i < CriminalInfo?.Count; ++i)
             {
-                var index = (i + 1).ToString();
+                var index = isReverse ? (CriminalInfo.Count - i).ToString() : (i + 1).ToString();
                 var criminalItem = CriminalInfo[i];
                 <TableRow @key="@index">
                     <TableRowHeader>@index</TableRowHeader>
@@ -34,8 +36,20 @@
             }
         </TableBody>
     </Table>
+    <Footer OnCheckCallback="s => { CriminalInfo?.Reverse(); isReverse = s; }" Text="@("Всего элементов: " + CriminalInfo?.Count)" />
 </CardItem>
 
 @code {
     [Parameter] public List<CriminalItem>? CriminalInfo { get; set; }
+
+    private BrowserDimension size { get; set; }
+    private string tableSize { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        size = await Service.GetDimensions();
+        tableSize = (size.Height - 250).ToString() + "px";
+    }
+
+    private bool isReverse = false;
 }

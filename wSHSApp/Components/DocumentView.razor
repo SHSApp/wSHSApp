@@ -1,5 +1,7 @@
-﻿<CardItem Title="Список документов">
-    <Table Hoverable>
+﻿@inject BrowserService Service
+
+<CardItem Title="Список документов">
+    <Table Hoverable FixedHeader FixedHeaderTableHeight="@tableSize" FixedHeaderTableMaxHeight="@tableSize">
         <TableHeader ThemeContrast="ThemeContrast.Light">
             <TableRow>
                 <TableHeaderCell>#</TableHeaderCell>
@@ -16,7 +18,7 @@
         <TableBody>
             @for (int i = 0; i < DocumentInfo?.Count; ++i)
             {
-                var index = (i + 1).ToString();
+                var index = isReverse ? (DocumentInfo.Count - i).ToString() : (i + 1).ToString(); ;
                 var documentItem = DocumentInfo[i];
                 <TableRow @key="@index" Color="@(!documentItem.Avail ? Color.Danger : documentItem.Name.Contains("Паспорт") ? Color.Success : Color.Default)">
                     <TableRowHeader>@index</TableRowHeader>
@@ -32,8 +34,20 @@
             }
         </TableBody>
     </Table>
+    <Footer OnCheckCallback="s => { DocumentInfo?.Reverse(); isReverse = s; }" Text="@("Всего элементов: " + DocumentInfo?.Count)" />
 </CardItem>
 
 @code {
     [Parameter] public List<DocumentItem>? DocumentInfo { get; set; }
+
+    private BrowserDimension size { get; set; }
+    private string tableSize { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        size = await Service.GetDimensions();
+        tableSize = (size.Height - 250).ToString() + "px";
+    }
+    
+    private bool isReverse = false;
 }
