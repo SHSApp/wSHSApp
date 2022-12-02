@@ -1,7 +1,9 @@
-﻿<BorderedItem Class="mt-1">
+﻿@inject AppData appData
+
+<BorderedItem Class="mt-1">
     <Row>
         <Column ColumnSize="ColumnSize.Is4.OnFullHD.Is12.OnTablet">
-            <RadioGroup TValue="bool" Name="sort" Buttons CheckedValue="@checkedValue" CheckedValueChanged="@OnCheckedValueChanged">
+            <RadioGroup TValue="bool" Name="sort" Buttons CheckedValue="@СheckedValue" CheckedValueChanged="@OnCheckedValueChanged">
                 <Radio Value="@false">По возрастанию <span class="oi oi-sort-ascending" aria-hidden="true"></span></Radio>
                 <Radio Value="@true"><span class="oi oi-sort-descending" aria-hidden="true"></span> По убыванию</Radio>
             </RadioGroup>
@@ -16,7 +18,10 @@
                         Сформировать отчет
                     </DropdownToggle>
                     <DropdownMenu>
-                        <DropdownItem Clicked="@ShowInfoMessage">Справка по корреспонденции</DropdownItem>
+                        @foreach (var rep in Reports.ReportList)
+                        {
+                            <DropdownItem Clicked="@(() => rep.EntryPoint(new string[] { appData.CurrentItemperson, rep.TemplateName }))">@rep.Name</DropdownItem>
+                        }                        
                     </DropdownMenu>
                 </Dropdown>
             </Column>
@@ -28,13 +33,13 @@
     [Parameter] public EventCallback<bool> OnCheckCallback { get; set; }
     [Parameter] public EventCallback? OnClickCallback { get; set; }
     [Parameter] public string? Text { get; set; }
-    [Parameter] public bool checkedValue { get; set; } = false;
+    [Parameter] public bool СheckedValue { get; set; } = false;
 
     [Inject] IMessageService? MessageService { get; set; }
 
     Task OnCheckedValueChanged(bool value)
     {
-        checkedValue = value;
+        СheckedValue = value;
         OnCheckCallback.InvokeAsync(value);
         return Task.CompletedTask;
     }

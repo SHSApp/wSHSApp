@@ -15,6 +15,7 @@ using System;
 using wSHSApp.Data;
 using wSHSApp.Models;
 using wSHSApp.Areas.Identity.Data;
+using wSHSApp.Reports;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDbConnectionString") ?? throw new InvalidOperationException("Connection string not found.");
@@ -90,5 +91,6 @@ app.MapFallbackToPage("/_Host");
 
 AkusConnect.Init();
 AkusService.Init();
+Reports.Init();
 
 app.Run();
