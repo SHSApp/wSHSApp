@@ -1,0 +1,34 @@
+﻿@inject AppData appData
+@inject LettersReport rep
+@inject NavigationManager navigation
+
+<Modal @ref="lettersModal">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>@rep.Name</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <Progress Value="@pbValue" />
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@(() => lettersModal.Hide())">Отмена</Button>
+            <Button Color="Color.Primary" Clicked="@LetersReportClick">Сформировать и скачать</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    private Modal? lettersModal;
+
+    int pbValue = 0;
+
+    async void LetersReportClick()
+    {
+        var document = await rep.EntryPoint(new string[] { appData.CurrentItemperson, "letters.cs.docx" });
+        lettersModal?.Hide();
+        navigation?.NavigateTo(document, forceLoad: true);
+    }
+}

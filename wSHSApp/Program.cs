@@ -45,13 +45,14 @@ builder.Services.AddIdentity<AkusUser, IdentityRole>(options =>
 }).AddEntityFrameworkStores<AppDbContext>().AddDefaultUI().AddDefaultTokenProviders();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<AkusUser>>();
 builder.Services.AddScoped<AppData>();
-builder.Services.AddScoped<CommonInfoService>();
-builder.Services.AddScoped<ExtraInfoService>();
-builder.Services.AddScoped<AdditionalInfoService>();
+builder.Services.AddSingleton<CommonInfoService>();
+builder.Services.AddSingleton<ExtraInfoService>();
+builder.Services.AddSingleton<AdditionalInfoService>();
 builder.Services.AddScoped<BrowserService>();
-builder.Services.AddScoped<StatisticInfoService>();
+builder.Services.AddSingleton<StatisticInfoService>();
+builder.Services.AddScoped<IReport, LettersReport>();
 
 builder.Services
     .AddBlazorise(options =>
@@ -80,6 +81,13 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/Foto"
 });
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(app.Environment.ContentRootPath, "Reports/Output")),
+    RequestPath = "/Documents"
+});
+
 app.UseRouting();
 
 app.UseAuthentication();
@@ -91,6 +99,6 @@ app.MapFallbackToPage("/_Host");
 
 AkusConnect.Init();
 AkusService.Init();
-Reports.Init();
+//File.
 
 app.Run();

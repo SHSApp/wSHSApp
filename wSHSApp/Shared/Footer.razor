@@ -1,29 +1,15 @@
-﻿@inject AppData appData
-
-<BorderedItem Class="mt-1">
+﻿<BorderedItem Class="mt-1">
     <Row>
-        <Column ColumnSize="ColumnSize.Is4.OnFullHD.Is12.OnTablet">
+        <Column ColumnSize="ColumnSize.Is6.OnFullHD.Is12.OnTablet">
             <RadioGroup TValue="bool" Name="sort" Buttons CheckedValue="@СheckedValue" CheckedValueChanged="@OnCheckedValueChanged">
                 <Radio Value="@false">По возрастанию <span class="oi oi-sort-ascending" aria-hidden="true"></span></Radio>
                 <Radio Value="@true"><span class="oi oi-sort-descending" aria-hidden="true"></span> По убыванию</Radio>
             </RadioGroup>
-        </Column>
-        <Column ColumnSize="ColumnSize.Is5.OnFullHD.Is12.OnTablet">
-            <p class="p-middle">@Text</p>
+            <p class="p-middle pl-2">@Text</p>
         </Column>
         <AuthorizeView>
-            <Column ColumnSize="ColumnSize.Is3.OnFullHD.Is12.OnTablet">
-                <Dropdown Position="Position.Absolute.End">
-                    <DropdownToggle Color="Color.Primary">
-                        Сформировать отчет
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        @foreach (var rep in Reports.ReportList)
-                        {
-                            <DropdownItem Clicked="@(() => rep.EntryPoint(new string[] { appData.CurrentItemperson, rep.TemplateName }))">@rep.Name</DropdownItem>
-                        }                        
-                    </DropdownMenu>
-                </Dropdown>
+            <Column ColumnSize="ColumnSize.Is6.OnFullHD.Is12.OnTablet">
+                <ReportButton />
             </Column>
         </AuthorizeView>
     </Row>
@@ -31,11 +17,8 @@
 
 @code {
     [Parameter] public EventCallback<bool> OnCheckCallback { get; set; }
-    [Parameter] public EventCallback? OnClickCallback { get; set; }
     [Parameter] public string? Text { get; set; }
     [Parameter] public bool СheckedValue { get; set; } = false;
-
-    [Inject] IMessageService? MessageService { get; set; }
 
     Task OnCheckedValueChanged(bool value)
     {
@@ -44,8 +27,4 @@
         return Task.CompletedTask;
     }
 
-    Task ShowInfoMessage()
-    {
-        return MessageService.Info("В настоящее время подсистема макросов в разработке.", "Web-AKUS");
-    }
 }
