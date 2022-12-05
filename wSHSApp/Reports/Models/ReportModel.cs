@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace wSHSApp.Reports.Models;
 
@@ -10,13 +11,24 @@ public class LetterReportModel
     public string? Birthday { get; set; }
     public int CountIn { get; set; }
     public int CountOut { get; set; }
-    public List<LetterModel> InputLetters { get; set; }
-    public List<LetterModel> OutputLetters { get; set; }
+    public List<LetterModel>? InputLetters { get; set; }
+    public List<LetterModel>? OutputLetters { get; set; }
 }
 
 public class LetterModel
 {
-    public int Id { get; set; }
-    public string? Whom { get; set; }
-    public string? Where { get; set; }
+    public DateTime Date { get; set; }
+    public string? Adress { get; set; }
+}
+
+class DateComparer : IComparer<LetterModel>
+{
+    public int Compare(LetterModel? x, LetterModel? y)
+    {
+        if (x?.Date == null || y?.Date == null)
+        {
+            return 0;
+        }
+        return x.Date.CompareTo(y.Date);
+    }
 }

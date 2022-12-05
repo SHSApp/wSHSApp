@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 //using System.Runtime.Serialization.Formatters.Soap;
 
-namespace wSHSApp.Data
+namespace FSLib.Declension
 {
     /// <summary>
     /// Класс для преобразования фамилии, имени и отчества (ФИО), наименования должности или подразделения, 
@@ -158,6 +158,11 @@ namespace wSHSApp.Data
                     ptrs[1], ref resultLen);
                 ThrowException(err);
                 return IntPtrToString(ptrs, resultLen);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return "";
             }
             finally
             {
@@ -494,7 +499,7 @@ namespace wSHSApp.Data
 
         #region Private functions and fields
 
-        private static Encoding encoding = Encoding.GetEncoding(1251);
+        private static Encoding encoding = CodePagesEncodingProvider.Instance.GetEncoding(1251);
 
         private static void CheckGender(Gender gender)
         {
@@ -530,8 +535,8 @@ namespace wSHSApp.Data
         private static IntPtr[] StringsToIntPtrArray(params string[] strs)
         {
             IntPtr[] ptrs = new IntPtr[strs.Length + 1];
-
-            for(int i = 0; i < ptrs.Length - 1; i++) ptrs[i] = StringToIntPtr(strs[i]);
+            
+            for (int i = 0; i < ptrs.Length - 1; i++) ptrs[i] = StringToIntPtr(strs[i]);
 
             ptrs[ptrs.Length - 1] = Marshal.AllocHGlobal(m_MaxResultStringBufSize);
 

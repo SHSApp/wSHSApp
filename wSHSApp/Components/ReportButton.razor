@@ -37,7 +37,7 @@
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Secondary" Clicked="@(() => CloseClick(lettersModal))">Закрыть</Button>
-            <Button Color="Color.Primary" Clicked="@(() => {  LetersReportClick(); } )">Сформировать</Button>
+            <Button Color="Color.Primary" Clicked="@LetersReportClick">Сформировать</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
@@ -65,6 +65,6 @@
     async void CloseClick(Modal? modal)
     {
         await rep.RemoveReport();
-        modal.Hide();
+        modal?.Hide();
     }
 }
