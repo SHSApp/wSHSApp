@@ -5,14 +5,17 @@ using System.Data.OleDb;
 using System.IO;
 using System.Threading.Tasks;
 using wSHSApp.Data;
+using wSHSApp.Models;
+using wSHSApp.Reports.Models;
 
 namespace wSHSApp.Reports;
 
-public class LettersReport : IReport
+public class LettersReport : InfoService, IReport
 {
     public string Name { set; get; } = "Справка по корреспонденции";
     public string Description { get; set; } = "Макрос формирует справку по корреспонденции на осужденного";
     public string Author { get; set; } = "(с) 2022 Сергей Шевченко";
+    public string OutputFileName { set; get; } = "Справка по корреспонденции";
 
     //protected NavigationManager? navManager;
 
@@ -26,53 +29,30 @@ public class LettersReport : IReport
 
     public async Task<string> EntryPoint(string[] args)
     {
-        DataSet ds = new();
-        string Query = "SELECT cast(iif(empty(vdataotpr), evl(vdataotpr, NULL), ctod(substr(vdataotpr, 4, 2) + " +
+        var documentOutput = GenerateReportFileName();
+        await Task.Run(async () =>
+        {
+            var Model = new LetterReportModel();
+            string Query = "SELECT cast(iif(empty(vdataotpr), evl(vdataotpr, NULL), ctod(substr(vdataotpr, 4, 2) + " +
             "\".\" + substr(vdataotpr, 1, 2) + \".\" + substr(vdataotpr, 7, 4))) as date) as vdataotpr1, vdataotpr, " +
             "vvid, vkomu, vhapr_spr FROM Data\\obida WHERE obida.Itemperson = ? ORDER BY vdataotpr1";
-        ds.Tables.Add(await GetData(args[0],Query));
 
-        //Path.Combine("Reports/Templates", args[1])
-        var document = DocumentFactory.Create(Path.Combine("Reports/Templates", args[1]));
-        document.Generate(Path.Combine("Reports/Output", "Document1.docx"));
-        return await Task.FromResult(Path.Combine("/Documents", "Document1.docx"));
+
+            var documentInput = DocumentFactory.Create(Path.Combine("Reports/Templates", args[1]));
+            
+            documentInput.Generate(Path.Combine("Reports/Output", documentOutput), Model);
+        });        
+        return await Task.FromResult(Path.Combine("/Documents", documentOutput));
     }
 
-    public async Task<DataTable> GetData(string Itemperson, string Query)
+    private string GenerateReportFileName()
     {
-        DataTable res = new();
-        if (!string.IsNullOrEmpty(Itemperson))
-        {
-            await Task.Run(() =>
-            {
-                try
-                {
-                    OleDbConnection Conn = new(ConnectionString);
-                    Conn.Open();
-                    OleDbCommand oCmd = Conn.CreateCommand();
-                    oCmd.Parameters.Add(new OleDbParameter("itemperson", OleDbType.WChar));
-                    oCmd.Parameters["itemperson"].Value = Itemperson;
-                    oCmd.CommandText = Query;
-                    OleDbDataReader reader = oCmd.ExecuteReader();
-                    res.Columns.Add("date");
-                    res.Columns.Add("whom");
-                    res.Columns.Add("where");
-                    while (reader.Read())
-                    {
-                        DataRow dr = res.NewRow();
-                        dr[0] = reader["vdataotpr"];
-                        dr[1] = "";
-                        dr[2] = reader["vkomu"]?.ToString().Trim(' ') + " " + Tools.IsEmpty(AkusService.QueryPc((string)reader["vhapr_spr"], "pc5"));
-                        res.Rows.Add(dr);
-                    }
-                    Conn.Close();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            });
-        }
-        return await Task.FromResult(res);
+        return OutputFileName = "Справка по корреспонденции-" + DateTime.UtcNow.ToString("ddMMyyyy-HHmmss") + ".docx";
+    }
+
+    public Task RemoveReport()
+    {
+        File.Delete(Path.Combine("Reports/Output", OutputFileName));
+        return Task.CompletedTask;
     }
 }

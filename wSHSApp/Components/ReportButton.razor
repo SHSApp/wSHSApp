@@ -1,6 +1,4 @@
-﻿@using System.IO
-
-@inject AppData appData
+﻿@inject AppData appData
 @inject IReport rep
 @inject NavigationManager navigation
 
@@ -38,8 +36,8 @@
             </Field>
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Secondary" Clicked="@(() => lettersModal.Hide())">Закрыть</Button>
-            <Button Color="Color.Primary" Clicked="@LetersReportClick">Сформировать</Button>
+            <Button Color="Color.Secondary" Clicked="@(() => CloseClick(lettersModal))">Закрыть</Button>
+            <Button Color="Color.Primary" Clicked="@(() => {  LetersReportClick(); } )">Сформировать</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
@@ -47,20 +45,26 @@
 @code {
 
     //LOADING FLAG
-    bool isLoading = false;
+    bool isLoading;
 
     //MODALS
     private Modal? lettersModal;
 
     //DOCUMENTS
-    string? letterReportDocument = null;
+    string? letterReportDocument;
 
-    async void LetersReportClick()
-    {
-        isLoading = true;
+    async Task LetersReportClick()
+    {       
+        isLoading = true; 
         StateHasChanged();
         letterReportDocument = await rep.EntryPoint(new string[] { appData.CurrentItemperson, "letters.cs.docx" });
         isLoading = false;
         StateHasChanged();        
+    }
+
+    async void CloseClick(Modal? modal)
+    {
+        await rep.RemoveReport();
+        modal.Hide();
     }
 }

@@ -68,7 +68,6 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="Reports\Output\" />
-    <Folder Include="Reports\Models\" />
   </ItemGroup>
 
   <ItemGroup>

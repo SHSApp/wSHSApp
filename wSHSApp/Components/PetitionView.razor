@@ -33,10 +33,11 @@
     private BrowserDimension size { get; set; }
     private string tableSize { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         size = await Service.GetDimensions();
         tableSize = (size.Height - 250).ToString() + "px";
+        base.OnParametersSetAsync();
     }
 
     private bool isReverse = false;
