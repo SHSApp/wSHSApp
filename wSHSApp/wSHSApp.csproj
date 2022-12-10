@@ -66,8 +66,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Components\Reports\" />
     <Folder Include="Migrations\" />
+    <Folder Include="Reports\DisciplineReport\Data\" />
+    <Folder Include="Reports\DisciplineReport\Model\" />
     <Folder Include="Reports\Output\" />
+	<Folder Include="Reports\Templates\" />
   </ItemGroup>
 
   <ItemGroup>

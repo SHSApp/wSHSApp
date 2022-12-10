@@ -1,0 +1,74 @@
+﻿@inject AppData appData
+@inject NavigationManager navigation
+
+<Modal @ref="modal" Closing="(t) => Rep!.RemoveReport()">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>@Rep?.Name</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                @if (string.IsNullOrEmpty(reportDocument) && !isLoading)
+                {
+                    <center>@Rep?.Description</center>
+                }
+                else if (string.IsNullOrEmpty(reportDocument) && isLoading)
+                {
+                    <SpinKit Type="SpinKitType.Chase" Color="#318cbc" Size="30px" Centered />
+                    <span style="font-size:smaller; font-style:italic">@Rep?.Author</span>
+                }
+                else if (!string.IsNullOrEmpty(reportDocument))
+                {
+                    <center>
+                        Запрашиваемый документ сформирован
+                        <Button Color="Color.Success" Clicked="@(() => navigation?.NavigateTo(reportDocument, forceLoad: true))">Скачать</Button>
+                    </center>
+                }
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Disabled="isLoading" Color="Color.Secondary" Clicked="@(() => CloseClick(modal))">Закрыть</Button>
+            <Button Disabled="isLoading" Color="Color.Primary" Clicked="@ReportClick">Сформировать</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    [Parameter] public IReport? Rep { set; get; }
+
+    protected bool isLoading;
+
+    protected Modal? modal;
+    protected override void OnInitialized()
+    {
+        args = new();
+        args.Add(appData.CurrentItemperson!);
+        args?.Add("letters.cs.docx");
+    }
+    protected List<string>? args;
+
+    protected string? reportDocument;
+
+    protected async Task ReportClick()
+    {
+        isLoading = true;
+        reportDocument = null;
+        StateHasChanged();
+        reportDocument = await Rep!.EntryPoint(args!.ToArray());
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    protected async void CloseClick(Modal? modal)
+    {
+        await Rep!.RemoveReport();
+        modal?.Hide();
+    }
+
+    public void Show()
+    {
+        modal?.Show();
+    }
+
+}

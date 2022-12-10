@@ -85,7 +85,7 @@
         else if (selectedTab == "letters")
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var auth = authState.User.Identity.IsAuthenticated ? true : false;
+            var auth = authState.User.Identity!.IsAuthenticated ? true : false;
             LetterList = await ExInfoService.GetLettersInfoAsync(appData.CurrentItemperson, auth);
         }
         //appData.CurrentItemperson = "!!!D¦­s5a";
@@ -113,7 +113,7 @@
                 LetterList = null;
                 StateHasChanged();
                 var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                LetterList = await ExInfoService.GetLettersInfoAsync(appData.CurrentItemperson, authState.User.Identity.IsAuthenticated);
+                LetterList = await ExInfoService.GetLettersInfoAsync(appData.CurrentItemperson, authState.User.Identity!.IsAuthenticated);
                 StateHasChanged();
             }
 

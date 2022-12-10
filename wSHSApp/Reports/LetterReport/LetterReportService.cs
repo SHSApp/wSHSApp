@@ -9,26 +9,15 @@ using wSHSApp.Models;
 using wSHSApp.Reports.Models;
 using FSLib.Declension;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace wSHSApp.Reports;
+namespace wSHSApp.Reports.LetterReport;
 
-public class LettersReport : InfoService, IReport
+public class LetterReportService : InfoService, IReport
 {
     public string Name { set; get; } = "Справка по корреспонденции";
     public string Description { get; set; } = "Макрос формирует справку по корреспонденции на осужденного";
-    public string Author { get; set; } = "(с) 2022 Сергей Шевченко";
+    public string Author { get; set; } = "© 2022 Сергей Шевченко";
     public string OutputFileName { set; get; } = "Справка по корреспонденции";
-
-    //protected NavigationManager? navManager;
-
-    //public LettersReport(NavigationManager? navigationManager)
-    //{
-    //    navManager = navigationManager;
-    //}
-
-    private readonly string ConnectionString = "Provider=VFPOLEDB.1;Data Source=" +
-            Tools.DataBasePath + ";Password=\"\";Collating Sequence=MACHINE;";
 
     public async Task<string> EntryPoint(string[] args)
     {
@@ -40,7 +29,7 @@ public class LettersReport : InfoService, IReport
             Model.FullName2 = Declension1251.GetSNPDeclension(currentPrisoner.Surname, currentPrisoner.Name, currentPrisoner.Lastname, DeclensionCase.Rodit);
             Model.Birthday = currentPrisoner.Birthday;
             Model.Name0 = currentPrisoner?.GetShortName();
-            Model.Name3 = Declension1251.GetSNPDeclension(currentPrisoner.GetShortName(), Gender.MasculineGender, DeclensionCase.Datel);
+            Model.Name3 = Declension1251.GetSNPDeclension(currentPrisoner!.GetShortName(), Gender.MasculineGender, DeclensionCase.Datel);
             string Query = "SELECT cast(iif(empty(vdataotpr), evl(vdataotpr, NULL), ctod(substr(vdataotpr, 4, 2) + " +
             "\".\" + substr(vdataotpr, 1, 2) + \".\" + substr(vdataotpr, 7, 4))) as date) as vdataotpr1, vdataotpr, " +
             "vkomu, vhapr_spr FROM Data\\obida WHERE obida.Itemperson = ? ORDER BY vdataotpr1";
@@ -49,7 +38,7 @@ public class LettersReport : InfoService, IReport
                 return new LetterModel
                 {
                     Date = DateTime.Parse((string)reader["vdataotpr"]),
-                    Adress = (reader["vkomu"].ToString().Trim(' ') + " " + Tools.IsEmpty(AkusService.QueryPc((string)reader["vhapr_spr"], "pc5"))).Trim(' ')
+                    Adress = (reader["vkomu"].ToString()!.Trim(' ') + " " + Tools.IsEmpty(AkusService.QueryPc((string)reader["vhapr_spr"], "pc5"))).Trim(' ')
                 };
             });
             Query = "SELECT cast(iif(empty(vd), evl(vd, NULL), ctod(substr(vd, 4, 2) + " +
@@ -83,7 +72,7 @@ public class LettersReport : InfoService, IReport
             documentOutput = GenerateReportFileName(currentPrisoner.GetShortName());
             var documentInput = DocumentFactory.Create(Path.Combine("Reports/Templates", args[1]), Model);
             documentInput.Generate(Path.Combine("Reports/Output", documentOutput), Model);
-        });        
+        });
         return await Task.FromResult(Path.Combine("/Documents", documentOutput));
     }
 

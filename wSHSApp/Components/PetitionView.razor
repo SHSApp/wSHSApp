@@ -34,10 +34,10 @@
     private string tableSize { get; set; }
 
     protected override async Task OnParametersSetAsync()
-    {
+    {       
+        await base.OnParametersSetAsync(); 
         size = await Service.GetDimensions();
-        tableSize = (size.Height - 250).ToString() + "px";
-        base.OnParametersSetAsync();
+        tableSize = (size.Height - 250).ToString() + "px";       
     }
 
     private bool isReverse = false;

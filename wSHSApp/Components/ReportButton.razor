@@ -1,70 +1,16 @@
-﻿@inject AppData appData
-@inject IReport rep
-@inject NavigationManager navigation
+﻿@inject IReport rep
 
 <Dropdown>
     <DropdownToggle Color="Color.Primary">
         Сформировать отчет
     </DropdownToggle>
     <DropdownMenu>
-        <DropdownItem Clicked="@(() => { letterReportDocument = null; lettersModal.Show(); })">@rep.Name</DropdownItem>
+        <DropdownItem Clicked="@(() => { lRep?.Show(); })">@rep.Name</DropdownItem>
     </DropdownMenu>
 </Dropdown>
 
-<Modal @ref="lettersModal">
-    <ModalContent Centered>
-        <ModalHeader>
-            <ModalTitle>@rep.Name</ModalTitle>
-            <CloseButton />
-        </ModalHeader>
-        <ModalBody>
-            <Field>
-                @if (string.IsNullOrEmpty(letterReportDocument) && !isLoading)
-                {
-                    <center>@rep.Description</center>
-                }
-                else if (string.IsNullOrEmpty(letterReportDocument) && isLoading)
-                {
-                    <SpinKit Type="SpinKitType.Chase" Color="#318cbc" Size="30px" Centered/>
-                }
-                else if (!string.IsNullOrEmpty(letterReportDocument))
-                {
-                    <center>Запрашиваемый документ сформирован 
-                        <Button Color="Color.Success" Clicked="@(() => navigation?.NavigateTo(letterReportDocument, forceLoad: true))">Скачать</Button>
-                    </center>
-                }
-            </Field>
-        </ModalBody>
-        <ModalFooter>
-            <Button Color="Color.Secondary" Clicked="@(() => CloseClick(lettersModal))">Закрыть</Button>
-            <Button Color="Color.Primary" Clicked="@LetersReportClick">Сформировать</Button>
-        </ModalFooter>
-    </ModalContent>
-</Modal>
+<LetterReport Rep="rep" @ref="lRep" />
 
 @code {
-
-    //LOADING FLAG
-    bool isLoading;
-
-    //MODALS
-    private Modal? lettersModal;
-
-    //DOCUMENTS
-    string? letterReportDocument;
-
-    async Task LetersReportClick()
-    {       
-        isLoading = true; 
-        StateHasChanged();
-        letterReportDocument = await rep.EntryPoint(new string[] { appData.CurrentItemperson, "letters.cs.docx" });
-        isLoading = false;
-        StateHasChanged();        
-    }
-
-    async void CloseClick(Modal? modal)
-    {
-        await rep.RemoveReport();
-        modal?.Hide();
-    }
+    LetterReport? lRep;
 }

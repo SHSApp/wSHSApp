@@ -16,15 +16,16 @@ using wSHSApp.Data;
 using wSHSApp.Models;
 using wSHSApp.Areas.Identity.Data;
 using wSHSApp.Reports;
+using wSHSApp.Reports.LetterReport;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("ApplicationDbConnectionString") ?? throw new InvalidOperationException("Connection string not found.");
+var identityConnectionString = builder.Configuration.GetConnectionString("IdentityDbConnectionString") ?? throw new InvalidOperationException("Connection string not found.");
 var akusConnectionPath = builder.Configuration.GetConnectionString("AkusDbPath") ?? throw new InvalidOperationException("AKUS Database path not found.");
-var recordsConnectionString = builder.Configuration.GetConnectionString("RecordsDbConnectionString") ?? throw new InvalidOperationException("Connection string not found.");
+var reportConnectionString = builder.Configuration.GetConnectionString("ReportDbConnectionString") ?? throw new InvalidOperationException("Connection string not found.");
 
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
-builder.Services.AddDbContext<RecordsDbContext>(options => options.UseSqlite(recordsConnectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(identityConnectionString));
+builder.Services.AddDbContext<ReportDbContext>(options => options.UseSqlite(reportConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddIdentity<AkusUser, IdentityRole>(options =>
 {
@@ -52,7 +53,7 @@ builder.Services.AddSingleton<ExtraInfoService>();
 builder.Services.AddSingleton<AdditionalInfoService>();
 builder.Services.AddScoped<BrowserService>();
 builder.Services.AddSingleton<StatisticInfoService>();
-builder.Services.AddScoped<IReport, LettersReport>();
+builder.Services.AddScoped<IReport, LetterReportService>();
 
 builder.Services
     .AddBlazorise(options =>
@@ -99,6 +100,5 @@ app.MapFallbackToPage("/_Host");
 
 AkusConnect.Init();
 AkusService.Init();
-//File.
 
 app.Run();
