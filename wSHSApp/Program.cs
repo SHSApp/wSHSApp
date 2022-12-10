@@ -17,6 +17,8 @@ using wSHSApp.Models;
 using wSHSApp.Areas.Identity.Data;
 using wSHSApp.Reports;
 using wSHSApp.Reports.LetterReport;
+using wSHSApp.Reports.DisciplineReport;
+using System.Collections.Generic;
 
 var builder = WebApplication.CreateBuilder(args);
 var identityConnectionString = builder.Configuration.GetConnectionString("IdentityDbConnectionString") ?? throw new InvalidOperationException("Connection string not found.");
@@ -53,7 +55,7 @@ builder.Services.AddSingleton<ExtraInfoService>();
 builder.Services.AddSingleton<AdditionalInfoService>();
 builder.Services.AddScoped<BrowserService>();
 builder.Services.AddSingleton<StatisticInfoService>();
-builder.Services.AddScoped<IReport, LetterReportService>();
+builder.Services.AddSingleton(sp => new List<IReport>() { new LetterReportService(), new DisciplineReportService() });
 
 builder.Services
     .AddBlazorise(options =>

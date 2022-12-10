@@ -88,7 +88,7 @@
             var auth = authState.User.Identity!.IsAuthenticated ? true : false;
             LetterList = await ExInfoService.GetLettersInfoAsync(appData.CurrentItemperson, auth);
         }
-        //appData.CurrentItemperson = "!!!D¦­s5a";
+        appData.CurrentItemperson = "!!!D¦­s5a";
     }
 
     private void OnSelectedTabChanged(string name)

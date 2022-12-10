@@ -17,7 +17,7 @@
                 else if (string.IsNullOrEmpty(reportDocument) && isLoading)
                 {
                     <SpinKit Type="SpinKitType.Chase" Color="#318cbc" Size="40px" Centered />
-                    <center style="font-size:xx-small; font-style:italic;">@Rep?.Author</center>
+                    <center style="font-size:xx-small; font-style:italic">@Rep?.Author</center>
                 }
                 else if (!string.IsNullOrEmpty(reportDocument))
                 {
@@ -45,7 +45,7 @@
     {
         args = new();
         args.Add(appData.CurrentItemperson!);
-        args?.Add("letters.cs.docx");
+        args?.Add("discipline.cs.docx");
     }
     protected List<string>? args;
 

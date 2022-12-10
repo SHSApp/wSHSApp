@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace wSHSApp.Reports.Models;
+namespace wSHSApp.Reports.LetterReport.Model;
 
 public class LetterReportModel
 {

@@ -1,16 +1,30 @@
-﻿@inject IReport rep
+﻿@inject List<IReport> reports
 
 <Dropdown>
     <DropdownToggle Color="Color.Primary">
         Сформировать отчет
     </DropdownToggle>
     <DropdownMenu>
-        <DropdownItem Clicked="@(() => { lRep?.Show(); })">@rep.Name</DropdownItem>
+        @foreach (var rep in reports!)
+        {
+            <DropdownItem Clicked="@(() => { Show(reports.IndexOf(rep)); })">@(rep.Name)</DropdownItem>
+        }
     </DropdownMenu>
 </Dropdown>
 
-<LetterReport Rep="rep" @ref="lRep" />
+<LetterReport Rep="reports![0]" @ref="reportViewsRefs![0]" />
+
+<DisciplineReport Rep="reports![1]" @ref="reportViewsRefs![1]" />
 
 @code {
-    LetterReport? lRep;
+    public List<Report?>? reportViewsRefs;
+
+    protected override void OnInitialized()
+    {
+        reportViewsRefs = new();
+        reportViewsRefs.Add(new LetterReport());
+        reportViewsRefs.Add(new DisciplineReport());       
+    }
+
+    private void Show(int i) => reportViewsRefs![i]!.Show();
 }

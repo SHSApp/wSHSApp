@@ -6,9 +6,9 @@ using System.IO;
 using System.Threading.Tasks;
 using wSHSApp.Data;
 using wSHSApp.Models;
-using wSHSApp.Reports.Models;
 using FSLib.Declension;
 using System.Collections.Generic;
+using wSHSApp.Reports.LetterReport.Model;
 
 namespace wSHSApp.Reports.LetterReport;
 
