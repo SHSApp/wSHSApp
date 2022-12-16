@@ -64,3 +64,10 @@ public class Violation : BaseEntity
     public string? VideoText { get; set; }
     public string RejectionText { get; set; }
 }
+
+[Table("Options")]
+public class Option : BaseEntity
+{
+    public string Name { get; set; }
+    public string Value { get; set; }
+}

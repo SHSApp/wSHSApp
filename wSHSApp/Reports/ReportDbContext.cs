@@ -11,6 +11,7 @@ public class ReportDbContext : DbContext
     public DbSet<Employee> Personal { get; set; }
     public DbSet<Place> Places { get; set; }
     public DbSet<Violation> Material { get; set; }
+    public DbSet<Option> Options { get; set; }
 
     public ReportDbContext(DbContextOptions<ReportDbContext> options)
         : base(options)

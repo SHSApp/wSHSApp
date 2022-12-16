@@ -41,8 +41,6 @@
     private List<Place>? placeList;
     private Place? selectedPlace;
 
-    int selectedDepartmentFilter;
-
     protected override async Task OnInitializedAsync()
     {
         placeList = dbContext.Places.ToList();

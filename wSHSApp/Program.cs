@@ -29,7 +29,7 @@ var reportConnectionString = builder.Configuration.GetConnectionString("ReportDb
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(identityConnectionString));
 builder.Services.AddDbContext<ReportDbContext>(options => options.UseSqlite(reportConnectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+//builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddIdentity<AkusUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;

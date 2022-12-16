@@ -1,4 +1,7 @@
 ﻿@page "/dbedit/{type}"
+
+<PageTitle>Веб-АКУС DB-Edit</PageTitle>
+
 @using wSHSApp.Components.Reports
 
 @if (Type == "personal")
@@ -7,11 +10,15 @@
 } 
 else if (Type == "material")
 {
-
+    <MaterialEditor />
 } 
-else if (Type== "place")
+else if (Type == "place")
 {
     <PlaceEditor />
+}
+else if (Type == "options")
+{
+    <OptionsEditor />
 }
 else
 {

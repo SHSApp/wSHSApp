@@ -1,0 +1,165 @@
+﻿@using wSHSApp.Reports.DisciplineReport.Data
+@using Microsoft.EntityFrameworkCore
+@inject ReportDbContext dbContext;
+
+<DataGrid TItem="Violation"
+          Data="@violationList"
+          @bind-SelectedRow="@selectedViolation"
+          Editable
+          Responsive
+          Filterable
+          ShowPager
+          PageSize="5"
+          RowInserted="@OnViolationNewItemAdded"
+          RowRemoved="@OnViolationItemRemoved"
+          RowUpdated="@OnViolationItemUpdated"
+          NewItemDefaultSetter="@OnViolationNewItemDefaultSetter"
+          CommandMode="DataGridCommandMode.ButtonRow"
+          EditMode="DataGridEditMode.Form">
+    <DataGridColumns>
+        <DataGridCommandColumn>
+            <SaveCommandTemplate>
+                <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </SaveCommandTemplate>
+            <CancelCommandTemplate>
+                <Button Class="px-1" ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </CancelCommandTemplate>
+        </DataGridCommandColumn>
+        <DataGridColumn Field="@nameof(Violation.Id)" Caption="#" Sortable="false" Filterable="false" />
+        <DataGridColumn Field="@nameof(Violation.Name)" Caption="Название" Editable >
+            <EditTemplate>
+                <Validation Validator="@CheckValue">
+                    <TextEdit Text="@((string)context.CellValue)" TextChanged="@( v => context.CellValue = v )" >
+                       <Feedback>
+                           <ValidationError />
+                        </Feedback>
+                    </TextEdit>
+                </Validation>
+            </EditTemplate>
+            <DisplayTemplate>
+                <b>@context!.Name</b>
+            </DisplayTemplate>
+        </DataGridColumn>
+        <DataGridColumn Field="@nameof(Violation.PreambleText)" Caption="Преамбула" Editable Filterable="false" >
+            <EditTemplate>
+                <Validation Validator="@CheckValue">
+                    <MemoEdit Text="@((string)context.CellValue)" AutoSize TextChanged="@( v => context.CellValue = v )" >
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </MemoEdit>
+                </Validation>
+            </EditTemplate>
+            <DisplayTemplate>
+                <Span>@context!.PreambleText[..35]</Span>
+            </DisplayTemplate>
+        </DataGridColumn>
+        <DataGridColumn Field="@nameof(Violation.ViolationText)" Caption="Текст нарушения" Editable Filterable="false" >
+            <EditTemplate>
+                <Validation Validator="@CheckValue">
+                    <MemoEdit Text="@((string)context.CellValue)" AutoSize TextChanged="@( v => context.CellValue = v )" >
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </MemoEdit>
+                </Validation>
+            </EditTemplate>
+            <DisplayTemplate>
+                <Span>@context!.ViolationText[..35]</Span>
+            </DisplayTemplate>
+        </DataGridColumn>
+        <DataGridColumn Field="@nameof(Violation.ViolationAdditionalText)" Caption="Текст нарушения 2" Editable Filterable="false" >
+            <EditTemplate>
+                <MemoEdit Text="@((string)context.CellValue)" AutoSize TextChanged="@( v => context.CellValue = v )" />
+            </EditTemplate>
+            <DisplayTemplate>
+                <Span>@context!.ViolationAdditionalText?[..35]</Span>
+            </DisplayTemplate>
+        </DataGridColumn>
+        <DataGridColumn Field="@nameof(Violation.RulesText)" Caption="Ссылка на пункт ПВР" Editable Filterable="false" >
+            <EditTemplate>
+                <Validation Validator="@CheckValue">
+                    <MemoEdit Text="@((string)context.CellValue)" AutoSize TextChanged="@( v => context.CellValue = v )">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </MemoEdit>
+                </Validation>
+            </EditTemplate>
+            <DisplayTemplate>
+                <Span>@context!.RulesText[..35]</Span>
+            </DisplayTemplate>
+        </DataGridColumn>
+        <DataGridColumn Field="@nameof(Violation.VideoText)" Caption="Текст видеопросмотра" Editable Filterable="false" >
+            <EditTemplate>
+                <MemoEdit Text="@((string)context.CellValue)" AutoSize TextChanged="@( v => context.CellValue = v )" />
+            </EditTemplate>
+            <DisplayTemplate>
+                <Span>@context!.VideoText?[..35]</Span>
+            </DisplayTemplate>
+        </DataGridColumn>
+        <DataGridColumn Field="@nameof(Violation.RejectionText)" Caption="Текст оказа" Editable Filterable="false" >
+            <EditTemplate>
+                <Validation Validator="@CheckValue">
+                    <MemoEdit Text="@((string)context.CellValue)" AutoSize TextChanged="@( v => context.CellValue = v )">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </MemoEdit>
+                </Validation>
+            </EditTemplate>
+            <DisplayTemplate>
+                <Span>@context!.RejectionText[..35]</Span>
+            </DisplayTemplate>
+        </DataGridColumn>
+    </DataGridColumns>
+    <ButtonRowTemplate>
+        <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">Добавить</Button>
+        <Button Color="Color.Primary" Disabled="(selectedViolation is null)" Clicked="context.EditCommand.Clicked">Изменить</Button>
+        <Button Color="Color.Danger" Disabled="(selectedViolation is null)" Clicked="context.DeleteCommand.Clicked">Удалить</Button>
+        <Button Color="Color.Link" Clicked="context.ClearFilterCommand.Clicked">Очистить фильтр</Button>
+    </ButtonRowTemplate>
+</DataGrid>
+
+@code {
+    private List<Violation>? violationList;
+    private Violation? selectedViolation;
+
+    protected override async Task OnInitializedAsync()
+    {
+        violationList = dbContext.Material.ToList();
+        await base.OnInitializedAsync();
+    }
+
+    void OnViolationNewItemDefaultSetter(Violation violation)
+    {
+
+    }
+
+    void OnViolationNewItemAdded(SavedRowItem<Violation, Dictionary<string, object>> item)
+    {
+        dbContext.Material.Add(item.Item);
+        dbContext.SaveChanges();
+    }
+
+    void OnViolationItemRemoved(Violation violation)
+    {
+        dbContext.Material.Remove(violation);
+        dbContext.SaveChanges();
+    }
+
+    void OnViolationItemUpdated(SavedRowItem<Violation, Dictionary<string, object>> item)
+    {
+        dbContext.Material.Update(item.Item);
+        dbContext.SaveChanges();
+    }
+
+    public void CheckValue(ValidatorEventArgs validationArgs)
+    {
+        ValidationRule.IsNotEmpty(validationArgs);
+        if (validationArgs.Status == ValidationStatus.Error)
+        {
+            validationArgs.ErrorText = "Поле должно быть заполнено.";
+        }
+    }
+}

@@ -1,0 +1,73 @@
+﻿@using wSHSApp.Reports.DisciplineReport.Data
+@using Microsoft.EntityFrameworkCore
+@inject ReportDbContext dbContext;
+
+<DataGrid TItem="Option"
+          Data="@optionList"
+          @bind-SelectedRow="@selectedOption"
+          Editable
+          Responsive
+          Filterable
+          ShowPager
+          PageSize="10"
+          RowInserted="@OnOptionNewItemAdded"
+          RowRemoved="@OnOptionItemRemoved"
+          RowUpdated="@OnOptionItemUpdated"
+          NewItemDefaultSetter="@OnOptionNewItemDefaultSetter"
+          CommandMode="DataGridCommandMode.ButtonRow"
+          EditMode="DataGridEditMode.Form">
+    <DataGridColumns>
+        <DataGridCommandColumn>
+            <SaveCommandTemplate>
+                <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </SaveCommandTemplate>
+            <CancelCommandTemplate>
+                <Button Class="px-1" ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </CancelCommandTemplate>
+        </DataGridCommandColumn>
+        <DataGridColumn Field="@nameof(Option.Id)" Caption="#" Sortable="false" Filterable="false" />
+        <DataGridColumn Field="@nameof(Option.Name)" Caption="Название" Editable />
+        <DataGridColumn Field="@nameof(Option.Value)" Caption="Значение" Editable Filterable="false" />
+    </DataGridColumns>
+    <ButtonRowTemplate>
+        <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">Добавить</Button>
+        <Button Color="Color.Primary" Disabled="(selectedOption is null)" Clicked="context.EditCommand.Clicked">Изменить</Button>
+        <Button Color="Color.Danger" Disabled="(selectedOption is null)" Clicked="context.DeleteCommand.Clicked">Удалить</Button>
+        <Button Color="Color.Link" Clicked="context.ClearFilterCommand.Clicked">Очистить фильтр</Button>
+    </ButtonRowTemplate>
+</DataGrid>
+
+@code {
+    private List<Option>? optionList;
+    private Option? selectedOption;
+
+    protected override async Task OnInitializedAsync()
+    {
+        optionList = dbContext.Options.ToList();
+        await base.OnInitializedAsync();
+    }
+
+    void OnOptionNewItemDefaultSetter(Option option)
+    {
+        option.Name = "Приказ";
+        option.Value = "приказ ФКУ ИК-18 от ";
+    }
+
+    void OnOptionNewItemAdded(SavedRowItem<Option, Dictionary<string, object>> item)
+    {
+        dbContext.Options.Add(item.Item);
+        dbContext.SaveChanges();
+    }
+
+    void OnOptionItemRemoved(Option option)
+    {
+        dbContext.Options.Remove(option);
+        dbContext.SaveChanges();
+    }
+
+    void OnOptionItemUpdated(SavedRowItem<Option, Dictionary<string, object>> item)
+    {
+        dbContext.Options.Update(item.Item);
+        dbContext.SaveChanges();
+    }
+}
