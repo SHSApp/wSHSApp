@@ -1,0 +1,75 @@
+﻿@using wSHSApp.Reports.DisciplineReport.Data
+@using Microsoft.EntityFrameworkCore
+@inject ReportDbContext dbContext;
+
+<DataGrid TItem="Place"
+          Data="@placeList"
+          @bind-SelectedRow="@selectedPlace"
+          Editable
+          Responsive
+          Filterable
+          ShowPager
+          PageSize="10"
+          RowInserted="@OnPlaceNewItemAdded"
+          RowRemoved="@OnPlaceItemRemoved"
+          RowUpdated="@OnPlaceItemUpdated"
+          NewItemDefaultSetter="@OnPlaceNewItemDefaultSetter"
+          CommandMode="DataGridCommandMode.ButtonRow"
+          EditMode="DataGridEditMode.Form">
+    <DataGridColumns>
+        <DataGridCommandColumn>
+            <SaveCommandTemplate>
+                <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </SaveCommandTemplate>
+            <CancelCommandTemplate>
+                <Button Class="px-1" ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </CancelCommandTemplate>
+        </DataGridCommandColumn>
+        <DataGridColumn Field="@nameof(Place.Id)" Caption="#" Sortable="false" Filterable="false"/>
+        <DataGridColumn Field="@nameof(Place.Name)" Caption="Название" Editable />
+        <DataGridColumn Field="@nameof(Place.Value)" Caption="Значение" Editable Filterable="false" />
+    </DataGridColumns>
+        <ButtonRowTemplate>
+            <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">Добавить</Button>
+            <Button Color="Color.Primary" Disabled="(selectedPlace is null)" Clicked="context.EditCommand.Clicked">Изменить</Button>
+            <Button Color="Color.Danger" Disabled="(selectedPlace is null)" Clicked="context.DeleteCommand.Clicked">Удалить</Button>
+            <Button Color="Color.Link" Clicked="context.ClearFilterCommand.Clicked">Очистить фильтр</Button>
+        </ButtonRowTemplate>
+    </DataGrid>
+
+    @code {
+    private List<Place>? placeList;
+    private Place? selectedPlace;
+
+    int selectedDepartmentFilter;
+
+    protected override async Task OnInitializedAsync()
+    {
+        placeList = dbContext.Places.ToList();
+        await base.OnInitializedAsync();
+    }
+
+    void OnPlaceNewItemDefaultSetter(Place place)
+    {
+        place.Name = "В ";
+        place.Value = "в [Номер отряда]";
+    }
+
+    void OnPlaceNewItemAdded(SavedRowItem<Place, Dictionary<string, object>> item)
+    {
+        dbContext.Places.Add(item.Item);
+        dbContext.SaveChanges();
+    }
+
+    void OnPlaceItemRemoved(Place place)
+    {
+        dbContext.Places.Remove(place);
+        dbContext.SaveChanges();
+    }
+
+    void OnPlaceItemUpdated(SavedRowItem<Place, Dictionary<string, object>> item)
+    {
+        dbContext.Places.Update(item.Item);
+        dbContext.SaveChanges();
+    }
+}

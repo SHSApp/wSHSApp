@@ -1,0 +1,124 @@
+﻿@using wSHSApp.Reports.DisciplineReport.Data
+@using Microsoft.EntityFrameworkCore
+@inject ReportDbContext dbContext;
+
+<DataGrid TItem="Employee"
+          Data="@employeeList"
+          @bind-SelectedRow="@selectedEmployee"
+          Editable
+          Responsive
+          Filterable
+          ShowPager
+          PageSize="10"
+          RowInserted="@OnEmployeeNewItemAdded"
+          RowRemoved="@OnEmployeeItemRemoved"
+          RowUpdated="@OnEmployeeItemUpdated"
+          NewItemDefaultSetter="@OnEmployeeNewItemDefaultSetter"
+          CommandMode="DataGridCommandMode.ButtonRow"
+          EditMode="DataGridEditMode.Form">
+    <DataGridColumns>
+        <DataGridCommandColumn>
+            <SaveCommandTemplate>
+                <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </SaveCommandTemplate>
+            <CancelCommandTemplate>
+                <Button Class="px-1" ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </CancelCommandTemplate>
+        </DataGridCommandColumn>
+        <DataGridColumn Field="@nameof(Employee.Id)" Caption="#" Sortable="false" Filterable="false"/>
+        <DataGridColumn Field="@nameof(Employee.ShortName)" Caption="Краткое ФИО" Editable />
+        <DataGridColumn Field="@nameof(Employee.FullName)" Caption="Полное ФИО" Editable Filterable="false" />
+        <DataGridColumn Field="@nameof(Employee.RankId)" Caption="Звание" Editable Filterable="false">
+            <EditTemplate>
+                <Select TValue="int" SelectedValue="@((int)context.CellValue)" SelectedValueChanged="@( v => context.CellValue = v )">                    
+                    @foreach (var r in dbContext.Ranks.ToList())
+                    {
+                        <SelectItem Value="r.Id">@r.ShortName</SelectItem>
+                    }
+                </Select>
+            </EditTemplate>
+            <DisplayTemplate>
+                <Span>@(dbContext!.Ranks!.FirstOrDefault(i => i.Id == context!.RankId)!.ShortName)</Span>
+            </DisplayTemplate>
+        </DataGridColumn>
+        <DataGridSelectColumn Field="@nameof(Employee.DepartmentId)" Caption="Отдел" Editable>
+            <FilterTemplate>
+                    <Select TValue="int" SelectedValue="@selectedDepartmentFilter" SelectedValueChanged="@(v => { selectedDepartmentFilter = v; context.TriggerFilterChange( v ); })">
+                    <SelectItem Value="0">--</SelectItem>
+                    @foreach (var d in dbContext.Departments.ToList())
+                    {
+                        <SelectItem Value="d.Id">@d.ShortName</SelectItem>
+                    }
+                </Select>
+            </FilterTemplate>
+            <EditTemplate>
+                <Select TValue="int" SelectedValue="@((int)context.CellValue)" SelectedValueChanged="@( v => context.CellValue = v )">
+                    @foreach (var d in dbContext.Departments.ToList())
+                    {
+                        <SelectItem Value="d.Id">@d.FullName</SelectItem>
+                    }
+                </Select>
+            </EditTemplate>
+            <DisplayTemplate>
+                <Span>@(dbContext!.Departments!.FirstOrDefault(i => i.Id == context!.DepartmentId)!.ShortName)</Span>
+            </DisplayTemplate>
+        </DataGridSelectColumn>
+        <DataGridColumn Field="@nameof(Employee.PositionId)" Caption="Должность" Editable Filterable="false">
+            <EditTemplate>
+                <Select TValue="int" SelectedValue="@((int)context.CellValue)" SelectedValueChanged="@( v => context.CellValue = v )">
+                    @foreach (var p in dbContext.Positions.ToList())
+                    {
+                        <SelectItem Value="p.Id">@p.ShortName</SelectItem>
+                    }
+                </Select>
+            </EditTemplate>
+            <DisplayTemplate>
+                <Span>@(dbContext!.Positions!.FirstOrDefault(i => i.Id == context!.PositionId)!.ShortName)</Span>
+            </DisplayTemplate>
+        </DataGridColumn>
+    </DataGridColumns>
+    <ButtonRowTemplate>
+        <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">Добавить</Button>
+        <Button Color="Color.Primary" Disabled="(selectedEmployee is null)" Clicked="context.EditCommand.Clicked">Изменить</Button>
+        <Button Color="Color.Danger" Disabled="(selectedEmployee is null)" Clicked="context.DeleteCommand.Clicked">Удалить</Button>
+        <Button Color="Color.Link" Clicked="context.ClearFilterCommand.Clicked">Очистить фильтр</Button>
+    </ButtonRowTemplate>
+</DataGrid>
+
+@code {
+    private List<Employee>? employeeList;
+    private Employee? selectedEmployee;
+
+    int selectedDepartmentFilter;
+
+    protected override async Task OnInitializedAsync()
+    {
+        employeeList = dbContext.Personal.ToList();
+        await base.OnInitializedAsync();
+    }
+
+    void OnEmployeeNewItemDefaultSetter(Employee employee)
+    {
+        employee.RankId = 1;
+        employee.PositionId = 1;
+        employee.DepartmentId = 1;
+    }
+
+    void OnEmployeeNewItemAdded(SavedRowItem<Employee, Dictionary<string, object>> item)
+    {
+        dbContext.Personal.Add(item.Item);
+        dbContext.SaveChanges();
+    }
+
+    void OnEmployeeItemRemoved(Employee employee)
+    {
+        dbContext.Personal.Remove(employee);
+        dbContext.SaveChanges();
+    }
+
+    void OnEmployeeItemUpdated(SavedRowItem<Employee, Dictionary<string, object>> item)
+    {
+        dbContext.Personal.Update(item.Item);
+        dbContext.SaveChanges();
+    }
+}

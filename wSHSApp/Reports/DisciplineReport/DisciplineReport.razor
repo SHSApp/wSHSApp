@@ -2,6 +2,9 @@
 @inject NavigationManager navigation
 @inherits Report
 
+@using wSHSApp.Reports.DisciplineReport.Data;
+@inject DisciplineReportDataFiller df;
+
 <Modal @ref="modal" Closing="(t) => Rep!.RemoveReport()">
     <ModalContent Centered>
         <ModalHeader>
@@ -46,6 +49,7 @@
         args = new();
         args.Add(appData.CurrentItemperson!);
         args?.Add("discipline.cs.docx");
+        //df.FillTables();
     }
     protected List<string>? args;
 

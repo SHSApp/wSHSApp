@@ -1,0 +1,29 @@
+﻿@page "/dbedit/{type}"
+@using wSHSApp.Components.Reports
+
+@if (Type == "personal")
+{
+    <PersonalEditor />
+} 
+else if (Type == "material")
+{
+
+} 
+else if (Type== "place")
+{
+    <PlaceEditor />
+}
+else
+{
+    <NoData Message="Выберите тип редактирования в меню сверху." />
+}
+
+
+@code {
+    [Parameter] public string? Type { get; set; }
+
+    public void Dispose()
+    {
+
+    }
+}

@@ -7,24 +7,24 @@
     <DropdownMenu>
         @foreach (var rep in reports!)
         {
-            <DropdownItem Clicked="@(() => { Show(reports.IndexOf(rep)); })">@(rep.Name)</DropdownItem>
+            <DropdownItem Clicked="@(() => Show(reports.IndexOf(rep)))">@(rep.Name)</DropdownItem>
         }
     </DropdownMenu>
 </Dropdown>
 
-<LetterReport Rep="reports![0]" @ref="reportViewsRefs![0]" />
+<LetterReport Rep="reports![0]" @ref="reportViewRefs![0]" />
 
-<DisciplineReport Rep="reports![1]" @ref="reportViewsRefs![1]" />
+<DisciplineReport Rep="reports![1]" @ref="reportViewRefs![1]" />
 
 @code {
-    public List<Report?>? reportViewsRefs;
+    public List<Report?>? reportViewRefs;
 
     protected override void OnInitialized()
     {
-        reportViewsRefs = new();
-        reportViewsRefs.Add(new LetterReport());
-        reportViewsRefs.Add(new DisciplineReport());       
+        reportViewRefs = new();
+        reportViewRefs.Add(new LetterReport());
+        reportViewRefs.Add(new DisciplineReport());       
     }
 
-    private void Show(int i) => reportViewsRefs![i]!.Show();
+    private void Show(int i) => reportViewRefs![i]!.Show();
 }

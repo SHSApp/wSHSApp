@@ -11,26 +11,23 @@
                 <Authorized>
                     <BarItem>
                         <BarDropdown>
-                            <BarDropdownToggle>Записи на прием</BarDropdownToggle>
+                            <BarDropdownToggle>Сервисное меню</BarDropdownToggle>
                             <BarDropdownMenu>
-                                <BarDropdownItem>В медицинскую часть</BarDropdownItem>
-                                <BarDropdownDivider />
-                                <BarDropdownItem>К начальнику учреждения</BarDropdownItem>
+                                <BarDropdown>
+                                    <BarDropdownToggle>БД макросов</BarDropdownToggle>
+                                    <BarDropdownMenu>
+                                        <BarDropdownItem To="/dbedit/personal">Список сотрудников</BarDropdownItem>
+                                        <BarDropdownDivider />
+                                        <BarDropdownItem To="/dbedit/material">Нарушения режима</BarDropdownItem>
+                                        <BarDropdownDivider />
+                                        <BarDropdownItem To="/dbedit/place">Места нарушений</BarDropdownItem>
+                                    </BarDropdownMenu>
+                                </BarDropdown>
                             </BarDropdownMenu>
                         </BarDropdown>
                     </BarItem>
                 </Authorized>
                 <NotAuthorized>
-                    <BarItem>
-                        <BarDropdown>
-                            <BarDropdownToggle>Записаться на прием</BarDropdownToggle>
-                            <BarDropdownMenu>
-                                <BarDropdownItem To="/registry">В медицинскую часть</BarDropdownItem>
-                                <BarDropdownDivider />
-                                <BarDropdownItem>К начальнику учреждения</BarDropdownItem>
-                            </BarDropdownMenu>
-                        </BarDropdown>
-                    </BarItem>
                     <BarItem>
                         <BarDropdown>
                             <BarDropdownToggle>Справочная информация</BarDropdownToggle>
