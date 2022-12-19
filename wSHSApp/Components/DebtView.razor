@@ -42,13 +42,13 @@
 
     private Color GetColor(DebtItem item)
     {
-        return item.Reason.Contains("алим") ? Color.Warning :
-        item.EndReason.Contains("расч") ? Color.Success :
-        item.EndReason.Contains("пост") ? Color.Info : Color.Default;
+        return item.Reason!.Contains("алим") ? Color.Warning :
+        item.EndReason!.Contains("расч") ? Color.Success :
+        item.EndReason!.Contains("пост") ? Color.Info : Color.Default;
     }
 
-    private BrowserDimension size { get; set; }
-    private string tableSize { get; set; }
+    private BrowserDimension? size { get; set; }
+    private string? tableSize { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

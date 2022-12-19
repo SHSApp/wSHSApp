@@ -20,7 +20,7 @@
             {
                 var index = isReverse ? (PackageInfo.Count - i).ToString() : (i + 1).ToString();
                 var packageItem = PackageInfo[i];
-                <TableRow @key="@index" Color="@(packageItem.Note.Contains("Медиц")?Color.Info:packageItem.Note.Contains("поощр")?Color.Success:Color.Default)">
+                <TableRow @key="@index" Color="@(packageItem.Note!.Contains("Медиц")?Color.Info:packageItem.Note!.Contains("поощр")?Color.Success:Color.Default)">
                     <TableRowHeader>@index</TableRowHeader>
                     <TableRowCell>@packageItem.Date</TableRowCell>
                     <TableRowCell>@packageItem.Type</TableRowCell>
@@ -40,8 +40,8 @@
 @code {
     [Parameter] public List<PackageItem>? PackageInfo { get; set; }
 
-    private BrowserDimension size { get; set; }
-    private string tableSize { get; set; }
+    private BrowserDimension? size { get; set; }
+    private string? tableSize { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

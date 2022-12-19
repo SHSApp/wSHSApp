@@ -1,7 +1,7 @@
 ﻿@page "/"
 
 <PageTitle>Главная</PageTitle>
-<Container>
+<Container Style="max-width: 100%">
     <Row>
         <Column>
             <BorderedItem>
@@ -37,7 +37,7 @@
                 </Authorized>
                 <NotAuthorized>
                     <BorderedItem Class="mt-2">
-                        <Image Style="height:200px; width: 100%; object-fit: cover;" Source="/img/mainpage/1.jpg"></Image>
+                        <Image Style="height:204px; width: 100%; object-fit: cover;" Source="/img/mainpage/1.jpg"></Image>
                         <CardBody>
                             <CardTitle Class="mt-2" Size="3" TextAlignment="TextAlignment.Center">
                                 Справочная информация
@@ -50,13 +50,7 @@
         </Column>
         <Column ColumnSize="ColumnSize.Is6.OnFullHD.Is12.OnTablet">
             <BorderedItem Class="mt-2">
-                <Image Style="height:200px; width: 100%; object-fit: cover;" Source="/img/mainpage/2.jpg"></Image>
-                <CardBody>
-                    <CardTitle Class="mt-2" Size="3" TextAlignment="TextAlignment.Center">
-                        Запись на прием
-                        <Button Color="Color.Primary" Type="ButtonType.Link">Посмотреть</Button>
-                    </CardTitle>
-                </CardBody>
+                <StatisticChartMini />
             </BorderedItem>
         </Column>
     </Row>

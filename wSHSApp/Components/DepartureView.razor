@@ -40,8 +40,8 @@
 @code {
     [Parameter] public List<DepartureItem>? DepartureInfo { get; set; }
 
-    private BrowserDimension size { get; set; }
-    private string tableSize { get; set; }
+    private BrowserDimension? size { get; set; }
+    private string? tableSize { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

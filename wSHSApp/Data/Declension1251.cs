@@ -74,7 +74,7 @@ namespace FSLib.Declension
             CheckGender(gender);
             CheckDeclensionCase(declensionCase);
 
-            IntPtr[] ptrs = null;
+            IntPtr[]? ptrs = null;
             try
             {
                 ptrs = StringsToIntPtrArray(surname, name, patronimic);
@@ -87,7 +87,7 @@ namespace FSLib.Declension
             }
             finally
             {
-                FreeIntPtr(ptrs);
+                FreeIntPtr(ptrs!);
             }
         }
 
@@ -111,7 +111,7 @@ namespace FSLib.Declension
 
             CheckDeclensionCase(declensionCase);
 
-            IntPtr[] ptrs = null;
+            IntPtr[]? ptrs = null;
             try
             {
                 ptrs = StringsToIntPtrArray(surname, name, patronimic);
@@ -124,7 +124,7 @@ namespace FSLib.Declension
             }
             finally
             {
-                FreeIntPtr(ptrs);
+                FreeIntPtr(ptrs!);
             }
         }
 
@@ -148,7 +148,7 @@ namespace FSLib.Declension
             CheckGender(gender);
             CheckDeclensionCase(declensionCase);
 
-            IntPtr[] ptrs = null;
+            IntPtr[]? ptrs = null;
             try
             {
                 ptrs = StringsToIntPtrArray(surnameNamePatronimic);
@@ -166,7 +166,7 @@ namespace FSLib.Declension
             }
             finally
             {
-                FreeIntPtr(ptrs);
+                FreeIntPtr(ptrs!);
             }
         }
 
@@ -190,7 +190,7 @@ namespace FSLib.Declension
             CheckGender(gender);
             CheckDeclensionCase(declensionCase);
 
-            IntPtr[] ptrs = null;
+            IntPtr[]? ptrs = null;
             try
             {
                 ptrs = StringsToIntPtrArray(name, surname);
@@ -203,7 +203,7 @@ namespace FSLib.Declension
             }
             finally
             {
-                FreeIntPtr(ptrs);
+                FreeIntPtr(ptrs!);
             }
         }
 
@@ -224,7 +224,7 @@ namespace FSLib.Declension
             CheckGender(gender);
             CheckDeclensionCase(declensionCase);
 
-            IntPtr[] ptrs = null;
+            IntPtr[]? ptrs = null;
             try
             {
                 ptrs = StringsToIntPtrArray(nameSurname);
@@ -237,7 +237,7 @@ namespace FSLib.Declension
             }
             finally
             {
-                FreeIntPtr(ptrs);
+                FreeIntPtr(ptrs!);
             }
         }
 
@@ -251,7 +251,7 @@ namespace FSLib.Declension
         {
             if(surnameNamePatronimic == null) throw new ArgumentNullException("surnameNamePatronimic");
 
-            IntPtr[] ptrs = null;
+            IntPtr[]? ptrs = null;
             try
             {
                 ptrs = StringsToIntPtrArray(surnameNamePatronimic);
@@ -263,7 +263,7 @@ namespace FSLib.Declension
             }
             finally
             {
-                FreeIntPtr(ptrs);
+                FreeIntPtr(ptrs!);
             }
         }
 
@@ -282,7 +282,7 @@ namespace FSLib.Declension
 
             CheckDeclensionCase(declensionCase);
 
-            IntPtr[] ptrs = null;
+            IntPtr[]? ptrs = null;
             try
             {
                 ptrs = StringsToIntPtrArray(appointment);
@@ -294,7 +294,7 @@ namespace FSLib.Declension
             }
             finally
             {
-                FreeIntPtr(ptrs);
+                FreeIntPtr(ptrs!);
             }
         }
 
@@ -316,7 +316,7 @@ namespace FSLib.Declension
 
             CheckDeclensionCase(declensionCase);
 
-            IntPtr[] ptrs = null;
+            IntPtr[]? ptrs = null;
             try
             {
                 ptrs = StringsToIntPtrArray(appointment, office);
@@ -328,7 +328,7 @@ namespace FSLib.Declension
             }
             finally
             {
-                FreeIntPtr(ptrs);
+                FreeIntPtr(ptrs!);
             }
         }
 
@@ -345,7 +345,7 @@ namespace FSLib.Declension
 
             CheckDeclensionCase(declensionCase);
 
-            IntPtr[] ptrs = null;
+            IntPtr[]? ptrs = null;
             try
             {
                 ptrs = StringsToIntPtrArray(office);
@@ -357,7 +357,7 @@ namespace FSLib.Declension
             }
             finally
             {
-                FreeIntPtr(ptrs);
+                FreeIntPtr(ptrs!);
             }
         }
 
@@ -421,8 +421,8 @@ namespace FSLib.Declension
         /// <param name="surname">Фамилия</param>
         /// <param name="name">Имя</param>
         /// <param name="patronimic">Отчество</param>
-        public static void GetSNM(string surnameNamePatronimic, 
-            out string surname, out string name, out string patronimic)
+        public static void GetSNM(string? surnameNamePatronimic, 
+            out string? surname, out string? name, out string? patronimic)
         {
             if(surnameNamePatronimic == null) throw new ArgumentNullException("surnameNamePatronimic");
 
@@ -499,7 +499,7 @@ namespace FSLib.Declension
 
         #region Private functions and fields
 
-        private static Encoding encoding = CodePagesEncodingProvider.Instance.GetEncoding(1251);
+        private static Encoding? encoding = CodePagesEncodingProvider.Instance.GetEncoding(1251);
 
         private static void CheckGender(Gender gender)
         {
@@ -524,7 +524,7 @@ namespace FSLib.Declension
             byte[] bRes = new byte[resultLen];
             Marshal.Copy(ptr, bRes, 0, resultLen);
 
-            return encoding.GetString(bRes);
+            return encoding!.GetString(bRes);
         }
 
         private static string IntPtrToString(IntPtr[] ptrs, int resultLen)
@@ -546,7 +546,7 @@ namespace FSLib.Declension
         private static IntPtr StringToIntPtr(string srcStr)
         {
             byte[] buf = new byte[srcStr.Length + 1];
-            encoding.GetBytes(srcStr, 0, srcStr.Length, buf, 0);
+            encoding!.GetBytes(srcStr, 0, srcStr.Length, buf, 0);
             buf[srcStr.Length] = 0;
 
             IntPtr pBuf = Marshal.AllocHGlobal(buf.Length);

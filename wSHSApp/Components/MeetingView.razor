@@ -20,7 +20,7 @@
             {
                 var index = isReverse ? (MeetingInfo.Count - i).ToString() : (i + 1).ToString();
                 var meetingItem = MeetingInfo[i];
-                <TableRow @key="@index" Color="@(meetingItem.Type.Contains("Крат")?Color.Secondary:Color.Default)">
+                <TableRow @key="@index" Color="@(meetingItem.Type!.Contains("Крат")?Color.Secondary:Color.Default)">
                     <TableRowHeader>@index</TableRowHeader>
                     <TableRowCell>@meetingItem.Date</TableRowCell>
                     <TableRowCell>@meetingItem.Type</TableRowCell>
@@ -40,8 +40,8 @@
 @code {
     [Parameter] public List<MeetingItem>? MeetingInfo { get; set; }
 
-    private BrowserDimension size { get; set; }
-    private string tableSize { get; set; }
+    private BrowserDimension? size { get; set; }
+    private string? tableSize { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

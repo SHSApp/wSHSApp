@@ -11,7 +11,7 @@ else if (AwardList.Count > 0)
 {
     <AwardView AwardInfo="@AwardList"/>
 }
-else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+else if ((appData?.CurrentItemperson == null) || (appData?.CurrentItemperson == ""))
 {
     <NoPrisoner />
 }
@@ -21,34 +21,34 @@ else
 }
 
 @code {
-    [Inject] private AppData appData { get; set; }
-    [Inject] private ExtraInfoService ExInfoService { get; set; }
-    [Inject] NavigationManager Navigation { get; set; }
+    [Inject] private AppData? appData { get; set; }
+    [Inject] private ExtraInfoService? ExInfoService { get; set; }
+    [Inject] NavigationManager? Navigation { get; set; }
     private List<AwardItem>? AwardList;
 
     protected override void OnInitialized()
     {
-        appData.OnChange += OnChangeHandler;
+        appData!.OnChange += OnChangeHandler;
     }
 
     public void Dispose()
     {
-        appData.OnChange -= OnChangeHandler;
+        appData!.OnChange -= OnChangeHandler;
     }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        AwardList = await ExInfoService.GetAwardInfoAsync(appData.CurrentItemperson);
+        AwardList = await ExInfoService!.GetAwardInfoAsync(appData?.CurrentItemperson);
     }
 
     private async void OnChangeHandler()
     {        
-        if (Navigation.ToBaseRelativePath(Navigation.Uri) == "award")
+        if (Navigation?.ToBaseRelativePath(Navigation.Uri) == "award")
         {
             AwardList = null;
             StateHasChanged();
-            AwardList = await ExInfoService.GetAwardInfoAsync(appData.CurrentItemperson);
+            AwardList = await ExInfoService!.GetAwardInfoAsync(appData?.CurrentItemperson);
             StateHasChanged();
         }        
     }

@@ -23,18 +23,18 @@ else
 
 @code {
     [Inject] private AppData? appData { get; set; }
-    [Inject] private AdditionalInfoService AddInfoService { get; set; }
+    [Inject] private AdditionalInfoService? AddInfoService { get; set; }
     [Inject] NavigationManager? Navigation { get; set; }
     private List<DepartureItem>? DepartureList;
 
     protected override void OnInitialized()
     {
-        appData.OnChange += OnChangeHandler;
+        appData!.OnChange += OnChangeHandler;
     }
 
     public void Dispose()
     {
-        appData.OnChange -= OnChangeHandler;
+        appData!.OnChange -= OnChangeHandler;
     }
 
     protected override async Task OnInitializedAsync()
@@ -49,7 +49,7 @@ else
         {
             DepartureList = null;
             StateHasChanged();
-            DepartureList = await AddInfoService.GetDeparturesInfoAsync(appData?.CurrentItemperson);
+            DepartureList = await AddInfoService!.GetDeparturesInfoAsync(appData?.CurrentItemperson);
             StateHasChanged();
         }
     }

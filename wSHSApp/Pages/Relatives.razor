@@ -23,18 +23,18 @@ else
 
 @code {
     [Inject] private AppData? appData { get; set; }
-    [Inject] private AdditionalInfoService AddInfoService { get; set; }
+    [Inject] private AdditionalInfoService? AddInfoService { get; set; }
     [Inject] NavigationManager? Navigation { get; set; }
     private List<RelativeItem>? RelativeList;
 
     protected override void OnInitialized()
     {
-        appData.OnChange += OnChangeHandler;
+        appData!.OnChange += OnChangeHandler;
     }
 
     public void Dispose()
     {
-        appData.OnChange -= OnChangeHandler;
+        appData!.OnChange -= OnChangeHandler;
     }
 
     protected override async Task OnInitializedAsync()
@@ -49,7 +49,7 @@ else
         {
             RelativeList = null;
             StateHasChanged();
-            RelativeList = await AddInfoService.GetRelativesInfoAsync(appData?.CurrentItemperson);
+            RelativeList = await AddInfoService!.GetRelativesInfoAsync(appData?.CurrentItemperson);
             StateHasChanged();
         }
     }

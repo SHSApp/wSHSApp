@@ -20,7 +20,7 @@
             {
                 var index = isReverse ? (DocumentInfo.Count - i).ToString() : (i + 1).ToString(); ;
                 var documentItem = DocumentInfo[i];
-                <TableRow @key="@index" Color="@(!documentItem.Avail ? Color.Danger : documentItem.Name.Contains("Паспорт") ? Color.Success : Color.Default)">
+                <TableRow @key="@index" Color="@(!documentItem.Avail ? Color.Danger : documentItem.Name!.Contains("Паспорт") ? Color.Success : Color.Default)">
                     <TableRowHeader>@index</TableRowHeader>
                     <TableRowCell>@documentItem.Name</TableRowCell>
                     <TableRowCell>@(documentItem.Avail ? "Да" : "Нет")</TableRowCell>
@@ -40,8 +40,8 @@
 @code {
     [Parameter] public List<DocumentItem>? DocumentInfo { get; set; }
 
-    private BrowserDimension size { get; set; }
-    private string tableSize { get; set; }
+    private BrowserDimension? size { get; set; }
+    private string? tableSize { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

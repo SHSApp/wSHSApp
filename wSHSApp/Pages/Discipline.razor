@@ -12,7 +12,7 @@ else if (DisciplList.Count > 0)
 {
     <DisciplView DisciplInfo="@DisciplList" />
 }
-else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+else if ((appData?.CurrentItemperson == null) || (appData?.CurrentItemperson == ""))
 {
     <NoPrisoner />
 }
@@ -22,37 +22,37 @@ else
 }
 
 @code {
-    [Inject] private AppData appData { get; set; }
-    [Inject] private ExtraInfoService ExInfoService { get; set; }
-    [Inject] NavigationManager Navigation { get; set; }
+    [Inject] private AppData? appData { get; set; }
+    [Inject] private ExtraInfoService? ExInfoService { get; set; }
+    [Inject] NavigationManager? Navigation { get; set; }
 
     private List<DisciplItem>? DisciplList;
 
     protected override void OnInitialized()
     {
-        appData.OnChange += OnChangeHandler;
+        appData!.OnChange += OnChangeHandler;
     }
 
     public void Dispose()
     {
-        appData.OnChange -= OnChangeHandler;
+        appData!.OnChange -= OnChangeHandler;
     }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        DisciplList = await ExInfoService.GetDisсiplInfoAsync(appData.CurrentItemperson, authState.User.Identity.IsAuthenticated);
+        DisciplList = await ExInfoService!.GetDisсiplInfoAsync(appData!.CurrentItemperson, authState.User.Identity!.IsAuthenticated);
     }
 
     private async void OnChangeHandler() 
     {
-        if (Navigation.ToBaseRelativePath(Navigation.Uri) == "discipline")
+        if (Navigation?.ToBaseRelativePath(Navigation.Uri) == "discipline")
         {
             DisciplList = null;
             StateHasChanged();
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            DisciplList = await ExInfoService.GetDisсiplInfoAsync(appData.CurrentItemperson, authState.User.Identity.IsAuthenticated);
+            DisciplList = await ExInfoService!.GetDisсiplInfoAsync(appData!.CurrentItemperson, authState.User.Identity!.IsAuthenticated);
             StateHasChanged();
         }       
     }

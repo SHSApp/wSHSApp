@@ -12,18 +12,18 @@
                       Data="@zeks"
                       TextField="@(( item ) => (item.Surname+" "+item.Name+" "+item.Lastname+", "+item.Birthday+" года рождения" ))"
                       ValueField="@(( item ) => item.Itemperson)"
-                      @bind-SelectedValue="@appData.CurrentItemperson"
+                      @bind-SelectedValue="@appData!.CurrentItemperson"
                       @bind-SelectedText="selectedAutoCompleteText"
                       Filter="AutocompleteFilter.StartsWith"
                       Placeholder="Введите фамилию осужденного..."
                       FreeTyping
                       MaxMenuHeight="500px"
-                      CustomFilter="@(( item, searchValue ) => item.Surname.StartsWith( searchValue, StringComparison.CurrentCultureIgnoreCase ))">
+                      CustomFilter="@(( item, searchValue ) => item.Surname!.StartsWith( searchValue, StringComparison.CurrentCultureIgnoreCase ))">
             <NotFoundContent> Пожалуйста простите... @context не найден! :( </NotFoundContent>
             <ItemContent>
                 <Div Flex="Flex.InlineFlex.JustifyContent.Between" Width="Width.Is100">
                     <Heading Margin="Margin.Is2.FromBottom">@(context.Item.Surname + " " + context.Item.Name + " " + context.Item.Lastname)</Heading>
-                        <Small>@(AkusService.GetGroup(context.Item.GroupId))</Small>
+                        <Small>@(AkusService.GetGroup(context.Item.GroupId!))</Small>
                     </Div>
                     <Paragraph Margin="Margin.Is2.FromBottom">@("Дата рождения: " + context.Item.Birthday)</Paragraph>
                 </ItemContent>
@@ -37,7 +37,7 @@
 
     @code {
 
-    [Inject] NavigationManager Navigation { get; set; }
+    [Inject] NavigationManager? Navigation { get; set; }
 
     public List<AkusPrisoner>? zeks;
 
@@ -50,7 +50,7 @@
     {
         await Task.Run(()=>selectedAutoCompleteText = null);
         await InvokeAsync(() => StateHasChanged());
-        appData.CurrentItemperson = null;
+        appData.CurrentItemperson = string.Empty;
         await InvokeAsync(() => StateHasChanged());
     }
 

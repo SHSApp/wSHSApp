@@ -30,8 +30,8 @@
 @code {
     [Parameter] public List<PetitionItem>? PetitionInfo { get; set; }
 
-    private BrowserDimension size { get; set; }
-    private string tableSize { get; set; }
+    private BrowserDimension? size { get; set; }
+    private string? tableSize { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {       

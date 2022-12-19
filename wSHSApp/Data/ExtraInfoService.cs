@@ -198,28 +198,13 @@ public class ExtraInfoService : InfoService
         });
     }
 
-    public async Task<List<DisciplItem>> GetDisсiplInfoAsync(string? Itemperson)
-    {
-        return await GetDisсiplInfoAsync(Itemperson, false);
-    }
+    public async Task<List<DisciplItem>> GetDisсiplInfoAsync(string? Itemperson) => await GetDisсiplInfoAsync(Itemperson, false);
 
-    public async Task<List<PackageItem>> GetPackagesInfoAsync(string? Itemperson)
-    {
-        return await GetPackagesInfoAsync(Itemperson, false);
-    }
+    public async Task<List<PackageItem>> GetPackagesInfoAsync(string? Itemperson) => await GetPackagesInfoAsync(Itemperson, false);
 
-    public async Task<List<MeetingItem>> GetMeetingsInfoAsync(string? Itemperson)
-    {
-        return await GetMeetingsInfoAsync(Itemperson, false);
-    }
+    public async Task<List<MeetingItem>> GetMeetingsInfoAsync(string? Itemperson) => await GetMeetingsInfoAsync(Itemperson, false);
 
-    public async Task<List<LetterItem>> GetLettersInfoAsync(string? Itemperson)
-    {
-        return await GetLettersInfoAsync(Itemperson, false);
-    }
+    public async Task<List<LetterItem>> GetLettersInfoAsync(string? Itemperson) => await GetLettersInfoAsync(Itemperson, false);
 
-    public async Task<List<AccountingItem>> GetAccountingInfoAsync(string? Itemperson)
-    {
-        return await GetAccountingInfoAsync(Itemperson, false);
-    }
+    public async Task<List<AccountingItem>> GetAccountingInfoAsync(string? Itemperson) => await GetAccountingInfoAsync(Itemperson, false);
 }

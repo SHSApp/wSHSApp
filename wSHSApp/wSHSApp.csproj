@@ -1,17 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TypeScriptTarget>ES3</TypeScriptTarget>
+    <TypeScriptTarget>ES6</TypeScriptTarget>
   </PropertyGroup>
 
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TypeScriptTarget>ES3</TypeScriptTarget>
+    <TypeScriptTarget>ES6</TypeScriptTarget>
   </PropertyGroup>
 
   <PropertyGroup>
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <PlatformTarget>x86</PlatformTarget>
+	<ImplicitUsings>disable</ImplicitUsings>
+	<ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -74,7 +76,30 @@
     <Folder Include="Reports\Output\" />
 	<Folder Include="Reports\Templates\" />
   </ItemGroup>
+	
+	<ItemGroup>
+		<Content Include="Reports\Templates\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
+	<ItemGroup>
+		<Content Include="favicon.ico" />
+		<Content Include="reportdata.db">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Padeg.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<Target Name="CreateReportsOutputFolder" AfterTargets="AfterPublish">
+		<MakeDir Directories="$(PublishDir)Reports\Output" Condition="!Exists('$(PublishDir)Reports\Output')" />
+	</Target>
+	
   <ItemGroup>
     <Content Update="Areas\Identity\Pages\_LoginPartial.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>

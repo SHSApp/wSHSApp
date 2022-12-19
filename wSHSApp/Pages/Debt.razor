@@ -11,7 +11,7 @@ else if (DebtList.Count > 0)
 {
     <DebtView DebtInfo="@DebtList" />
 }
-else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+else if ((appData?.CurrentItemperson == null) || (appData?.CurrentItemperson == ""))
 {
         <NoPrisoner />
 }
@@ -21,34 +21,34 @@ else
 }
 
 @code {
-    [Inject] private AppData appData { get; set; }
-    [Inject] private ExtraInfoService ExInfoService { get; set; }
-    [Inject] NavigationManager Navigation { get; set; }
+    [Inject] private AppData? appData { get; set; }
+    [Inject] private ExtraInfoService? ExInfoService { get; set; }
+    [Inject] NavigationManager? Navigation { get; set; }
     private List<DebtItem>? DebtList;
 
     protected override void OnInitialized()
     {
-        appData.OnChange += OnChangeHandler;
+        appData!.OnChange += OnChangeHandler;
     }
 
     public void Dispose()
     {
-        appData.OnChange -= OnChangeHandler;
+        appData!.OnChange -= OnChangeHandler;
     }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        DebtList = await ExInfoService.GetDebtInfoAsync(appData.CurrentItemperson);
+        DebtList = await ExInfoService!.GetDebtInfoAsync(appData?.CurrentItemperson);
     }
 
     private async void OnChangeHandler()
     {
-        if (Navigation.ToBaseRelativePath(Navigation.Uri) == "debt")
+        if (Navigation?.ToBaseRelativePath(Navigation.Uri) == "debt")
         {
             DebtList = null;
             StateHasChanged();
-            DebtList = await ExInfoService.GetDebtInfoAsync(appData.CurrentItemperson);
+            DebtList = await ExInfoService!.GetDebtInfoAsync(appData?.CurrentItemperson);
             StateHasChanged();
         }
     }

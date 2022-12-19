@@ -26,10 +26,10 @@ public class LetterReportService : InfoService, IReport
         {
             var Model = new LetterReportModel();
             AkusPrisoner currentPrisoner = AkusConnect.Names.Where(p => p.Itemperson == args[0]).First();
-            Model.FullName2 = Declension1251.GetSNPDeclension(currentPrisoner.Surname, currentPrisoner.Name, currentPrisoner.Lastname, DeclensionCase.Rodit);
+            Model.FullName2 = Declension1251.GetSNPDeclension(currentPrisoner.Surname!, currentPrisoner.Name!, currentPrisoner.Lastname!, DeclensionCase.Rodit);
             Model.Birthday = currentPrisoner.Birthday;
-            Model.Name0 = currentPrisoner?.GetShortName();
-            Model.Name3 = Declension1251.GetSNPDeclension(currentPrisoner!.GetShortName(), Gender.MasculineGender, DeclensionCase.Datel);
+            Model.Name0 = currentPrisoner?.ToString();
+            Model.Name3 = Declension1251.GetSNPDeclension(currentPrisoner!.ToString(), Gender.MasculineGender, DeclensionCase.Datel);
             string Query = "SELECT cast(iif(empty(vdataotpr), evl(vdataotpr, NULL), ctod(substr(vdataotpr, 4, 2) + " +
             "\".\" + substr(vdataotpr, 1, 2) + \".\" + substr(vdataotpr, 7, 4))) as date) as vdataotpr1, vdataotpr, " +
             "vkomu, vhapr_spr FROM Data\\obida WHERE obida.Itemperson = ? ORDER BY vdataotpr1";
@@ -69,7 +69,7 @@ public class LetterReportService : InfoService, IReport
             });
             Model.CountIn = Model.InputLetters.Count;
             Model.CountOut = Model.OutputLetters.Count;
-            documentOutput = GenerateReportFileName(currentPrisoner.GetShortName());
+            documentOutput = GenerateReportFileName(currentPrisoner.ToString());
             var documentInput = DocumentFactory.Create(Path.Combine("Reports/Templates", args[1]), Model);
             documentInput.Generate(Path.Combine("Reports/Output", documentOutput), Model);
         });

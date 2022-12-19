@@ -21,7 +21,7 @@
                     <PetitionView PetitionInfo="@PetitionList" />
                 </BorderedItem>               
             }
-            else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+            else if ((appData?.CurrentItemperson == null) || (appData?.CurrentItemperson == ""))
             {
                 <br />
                 <NoPrisoner />
@@ -43,7 +43,7 @@
                     <LetterView LetterInfo="@LetterList" />
                 </BorderedItem>
             }
-            else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+            else if ((appData?.CurrentItemperson == null) || (appData?.CurrentItemperson == ""))
             {
                 <br />
                 <NoPrisoner />
@@ -59,20 +59,20 @@
 
 @code {
     private string selectedTab = "petitions";
-    [Inject] private AppData appData { get; set; }
-    [Inject] private ExtraInfoService ExInfoService { get; set; }
-    [Inject] NavigationManager Navigation { get; set; }
+    [Inject] private AppData? appData { get; set; }
+    [Inject] private ExtraInfoService? ExInfoService { get; set; }
+    [Inject] NavigationManager? Navigation { get; set; }
     private List<PetitionItem>? PetitionList;
     private List<LetterItem>? LetterList;
 
     protected override void OnInitialized()
     {
-        appData.OnChange += OnChangeHandler;
+        appData!.OnChange += OnChangeHandler;
     }
 
     public void Dispose()
     {
-        appData.OnChange -= OnChangeHandler;
+        appData!.OnChange -= OnChangeHandler;
     }
 
     protected override async Task OnInitializedAsync()
@@ -80,15 +80,14 @@
         await base.OnInitializedAsync();
         if (selectedTab == "petitions")
         {
-            PetitionList = await ExInfoService.GetPetitionsInfoAsync(appData.CurrentItemperson);
+            PetitionList = await ExInfoService!.GetPetitionsInfoAsync(appData!.CurrentItemperson);
         }
         else if (selectedTab == "letters")
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var auth = authState.User.Identity!.IsAuthenticated ? true : false;
-            LetterList = await ExInfoService.GetLettersInfoAsync(appData.CurrentItemperson, auth);
+            LetterList = await ExInfoService!.GetLettersInfoAsync(appData!.CurrentItemperson, authState.User.Identity!.IsAuthenticated);
         }
-        appData.CurrentItemperson = "!!!D¦­s5a";
+        //appData!.CurrentItemperson = "!!!D¦­s5a";
     }
 
     private void OnSelectedTabChanged(string name)
@@ -99,13 +98,13 @@
 
     private async void OnChangeHandler()
     {
-        if (Navigation.ToBaseRelativePath(Navigation.Uri) == "post")
+        if (Navigation!.ToBaseRelativePath(Navigation.Uri) == "post")
         {
             if (selectedTab == "petitions")
             {
                 PetitionList = null;
                 StateHasChanged();
-                PetitionList = await ExInfoService.GetPetitionsInfoAsync(appData.CurrentItemperson);
+                PetitionList = await ExInfoService!.GetPetitionsInfoAsync(appData!.CurrentItemperson);
                 StateHasChanged();
             }
             else if (selectedTab == "letters")
@@ -113,7 +112,7 @@
                 LetterList = null;
                 StateHasChanged();
                 var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                LetterList = await ExInfoService.GetLettersInfoAsync(appData.CurrentItemperson, authState.User.Identity!.IsAuthenticated);
+                LetterList = await ExInfoService!.GetLettersInfoAsync(appData!.CurrentItemperson, authState.User.Identity!.IsAuthenticated);
                 StateHasChanged();
             }
 

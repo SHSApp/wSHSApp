@@ -1,0 +1,56 @@
+﻿@using System
+
+<LoadingIndicator @ref="loadingIndicator">
+    <Chart @ref="barChart" Type="ChartType.Line" TItem="double" Options="@chartOptions" />
+</LoadingIndicator>
+
+@code {
+    [Inject] private StatisticInfoService? InfoService { get; set; }
+
+    LoadingIndicator? loadingIndicator;
+
+    Chart<double>? barChart;
+
+    List<double>? data;
+
+    static int nowYear = DateTime.UtcNow.Year;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await HandleRedraw();
+        }
+    }
+
+    ChartOptions chartOptions = new()
+    {
+        AspectRatio = 2.44
+    };
+
+    async Task HandleRedraw()
+    {
+        await loadingIndicator!.Show();
+        data = await InfoService!.GetDisciplineStatisticMini();
+        await barChart!.Clear();
+        await barChart.AddLabelsDatasetsAndUpdate(Labels, GetBarChartDataset());
+        await loadingIndicator.Hide();
+    }
+
+    private BarChartDataset<double> GetBarChartDataset()
+    {
+        return new()
+            {
+                Label = "Статистика нарушений и поощрений за месяц",
+                Data = data,
+                BackgroundColor = backgroundColors,
+                BorderColor = borderColors,
+                BorderWidth = 1
+            };
+    }
+
+    string[] Labels = { $"Нарушения {DateTime.Now.ToString("MMMM")} {nowYear} г.", $"Поощрения {DateTime.Now.ToString("MMMM")} {nowYear} г." };
+    List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 159, 64, 0.2f), ChartColor.FromRgba(99, 205, 132, 0.2f) };
+    List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 159, 64, 1f), ChartColor.FromRgba(99, 205, 132, 1f) };
+
+}

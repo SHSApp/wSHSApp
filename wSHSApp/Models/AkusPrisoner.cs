@@ -8,6 +8,8 @@ public class AkusPrisoner
     public string? Birthday { get; set; }
     public string? Itemperson { get; set; }
     public string? GroupId { get; set; }
-    public string GetFullName() => Surname + " " + Name + (!string.IsNullOrWhiteSpace(Lastname) ? " " + Lastname : "");
-    public string GetShortName() => Surname + " " + Name?.ToUpper()[0] + "." + (!string.IsNullOrWhiteSpace(Lastname) ? Lastname?.ToUpper()[0] + "." : "");
+    public string ToString(bool getFullname) =>
+        getFullname ? $"{Surname} {Name}{(!string.IsNullOrWhiteSpace(Lastname) ? " " + Lastname : "")}"
+        : $"{Surname} {Name?.ToUpper()[0]}.{(!string.IsNullOrWhiteSpace(Lastname) ? Lastname?.ToUpper()[0] + "." : "")}";
+    public override string ToString() => ToString(false);
 }

@@ -12,7 +12,7 @@ else if (AccountingList.Count > 0)
 {
     <AccountingView AccountingInfo="@AccountingList" />
 }
-else if ((appData.CurrentItemperson == null) || (appData.CurrentItemperson == ""))
+else if ((appData?.CurrentItemperson == null) || (appData?.CurrentItemperson == ""))
 {
     <NoPrisoner />
 }
@@ -22,37 +22,36 @@ else
 }
 
 @code {
-    [Inject] private AppData appData { get; set; }
-    [Inject] private ExtraInfoService ExInfoService { get; set; }
-    [Inject] NavigationManager Navigation { get; set; }
+    [Inject] private AppData? appData { get; set; }
+    [Inject] private ExtraInfoService? ExInfoService { get; set; }
+    [Inject] NavigationManager? Navigation { get; set; }
     private List<AccountingItem>? AccountingList;
 
     protected override void OnInitialized()
     {
-        appData.OnChange += OnChangeHandler;
+        appData!.OnChange += OnChangeHandler;
     }
 
     public void Dispose()
     {
-        appData.OnChange -= OnChangeHandler;
+        appData!.OnChange -= OnChangeHandler;
     }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var auth = authState.User.Identity.IsAuthenticated ? true : false;
-        AccountingList = await ExInfoService.GetAccountingInfoAsync(appData.CurrentItemperson, auth);
+        AccountingList = await ExInfoService!.GetAccountingInfoAsync(appData?.CurrentItemperson, authState.User.Identity!.IsAuthenticated);
     }
 
     private async void OnChangeHandler()
     {
-        if (Navigation.ToBaseRelativePath(Navigation.Uri) == "accounting")
+        if (Navigation?.ToBaseRelativePath(Navigation.Uri) == "accounting")
         {
             AccountingList = null;
             StateHasChanged();
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            AccountingList = await ExInfoService.GetAccountingInfoAsync(appData.CurrentItemperson, authState.User.Identity.IsAuthenticated);
+            AccountingList = await ExInfoService!.GetAccountingInfoAsync(appData?.CurrentItemperson, authState.User.Identity!.IsAuthenticated);
             StateHasChanged();
         }
     }

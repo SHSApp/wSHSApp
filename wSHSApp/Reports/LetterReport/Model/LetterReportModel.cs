@@ -25,10 +25,7 @@ class DateComparer : IComparer<LetterModel>
 {
     public int Compare(LetterModel? x, LetterModel? y)
     {
-        if (x?.Date == null || y?.Date == null)
-        {
-            return 0;
-        }
+        if (x?.Date == null || y?.Date == null) return 0;
         return x.Date.CompareTo(y.Date);
     }
 }

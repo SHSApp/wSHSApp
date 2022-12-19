@@ -5,7 +5,7 @@
 </LoadingIndicator>
 
 @code {
-    [Inject] private StatisticInfoService InfoService { get; set; }
+    [Inject] private StatisticInfoService? InfoService { get; set; }
 
     LoadingIndicator? loadingIndicator;
 
@@ -24,24 +24,24 @@
     }
 
     ChartOptions chartOptions = new()
-        {
-            AspectRatio = 2.44
-        };
+    {
+        AspectRatio = 2.44
+    };
 
     async Task HandleRedraw()
     {
-        await loadingIndicator.Show();
-        data = await InfoService.GetDisciplineStatistic(nowYear);
-        await barChart.Clear();
-        await barChart.AddLabelsDatasetsAndUpdate(Labels, GetBarChartDataset());
-        await loadingIndicator.Hide();
+        await loadingIndicator!.Show();
+        data = await InfoService!.GetDisciplineStatistic(nowYear);
+        await barChart!.Clear();
+        await barChart!.AddLabelsDatasetsAndUpdate(Labels, GetBarChartDataset());
+        await loadingIndicator!.Hide();
     }
 
     private BarChartDataset<double> GetBarChartDataset()
     {
         return new()
         {
-            Label = "Статистика нарушений и поощрений",
+            Label = "Статистика нарушений и поощрений за год (АППГ)",
             Data = data,
             BackgroundColor = backgroundColors,
             BorderColor = borderColors,

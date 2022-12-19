@@ -24,7 +24,7 @@
             {
                 var index = isReverse ? (DisciplInfo.Count - i).ToString() : (i + 1).ToString(); ;
                 var disciplItem = DisciplInfo[i];
-                <TableRow @key="@index" Color="@(disciplItem.Penalty.Contains("ШИЗО")?Color.Warning:disciplItem.Penalty.Contains("ПКТ")?Color.Danger:Color.Default)">
+                <TableRow @key="@index" Color="@(disciplItem.Penalty!.Contains("ШИЗО")?Color.Warning:disciplItem.Penalty!.Contains("ПКТ")?Color.Danger:Color.Default)">
                     <TableRowHeader>@index</TableRowHeader>
                     <AuthorizeView>
                         <TableRowCell>@disciplItem.DateOfViolation</TableRowCell>
@@ -48,8 +48,8 @@
 @code {
     [Parameter] public List<DisciplItem>? DisciplInfo { get; set; }
 
-    private BrowserDimension size { get; set; }
-    private string tableSize { get; set; }
+    private BrowserDimension? size { get; set; }
+    private string? tableSize { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

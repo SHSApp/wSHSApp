@@ -31,7 +31,7 @@ public class DisciplineReportService : InfoService, IReport
             //Model.Name0 = currentPrisoner?.GetShortName();
             //Model.Name3 = Declension1251.GetSNPDeclension(currentPrisoner!.GetShortName(), Gender.MasculineGender, DeclensionCase.Datel);
 
-            documentOutput = GenerateReportFileName(currentPrisoner.GetShortName());
+            documentOutput = GenerateReportFileName(currentPrisoner.ToString());
             //var documentInput = DocumentFactory.Create(Path.Combine("Reports/Templates", args[1]), Model);
             //documentInput.Generate(Path.Combine("Reports/Output", documentOutput), Model);
         });

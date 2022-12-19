@@ -48,16 +48,16 @@
 
     private TextColor getStatusColor(string? status)
     {
-        if (status.Contains("налич")) return TextColor.Success;
-        else if (status.Contains("Убыл")) return TextColor.Danger;
-        else if (status.Contains("Освоб")) return TextColor.Primary;
+        if (status!.Contains("налич")) return TextColor.Success;
+        else if (status!.Contains("Убыл")) return TextColor.Danger;
+        else if (status!.Contains("Освоб")) return TextColor.Primary;
         else return TextColor.Default;
     }
 
     private TextColor getConditionColor(string? conditions)
     {
-        if (conditions.Contains("Облегч")) return TextColor.Success;
-        else if (conditions.Contains("Строгие")) return TextColor.Danger;
+        if (conditions!.Contains("Облегч")) return TextColor.Success;
+        else if (conditions!.Contains("Строгие")) return TextColor.Danger;
         else return TextColor.Default;
     }
 }
