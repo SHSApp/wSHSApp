@@ -23,8 +23,13 @@
     {
         reportViewRefs = new();
         reportViewRefs.Add(new LetterReport());
-        reportViewRefs.Add(new DisciplineReport());       
+        reportViewRefs.Add(new DisciplineReport());
     }
 
     private void Show(int i) => reportViewRefs![i]!.Show();
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        Show(1);
+    }
 }

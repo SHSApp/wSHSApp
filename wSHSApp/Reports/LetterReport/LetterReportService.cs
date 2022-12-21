@@ -16,7 +16,7 @@ public class LetterReportService : InfoService, IReport
 {
     public string Name { set; get; } = "Справка по корреспонденции";
     public string Description { get; set; } = "Макрос формирует справку по корреспонденции на осужденного";
-    public string Author { get; set; } = "© 2022 Сергей Шевченко";
+    public string Author { get; set; } = "© Сергей Шевченко";
     public string OutputFileName { set; get; } = "Справка по корреспонденции";
 
     public async Task<string> EntryPoint(string[] args)
@@ -32,13 +32,14 @@ public class LetterReportService : InfoService, IReport
             Model.Name3 = Declension1251.GetSNPDeclension(currentPrisoner!.ToString(), Gender.MasculineGender, DeclensionCase.Datel);
             string Query = "SELECT cast(iif(empty(vdataotpr), evl(vdataotpr, NULL), ctod(substr(vdataotpr, 4, 2) + " +
             "\".\" + substr(vdataotpr, 1, 2) + \".\" + substr(vdataotpr, 7, 4))) as date) as vdataotpr1, vdataotpr, " +
-            "vkomu, vhapr_spr FROM Data\\obida WHERE obida.Itemperson = ? ORDER BY vdataotpr1";
+            "vkomu, vnomish, vhapr_spr FROM Data\\obida WHERE obida.Itemperson = ? ORDER BY vdataotpr1";
             List<LetterModel> petitions = await GetItemsAsync(args[0], Query, (reader) =>
             {
                 return new LetterModel
                 {
                     Date = DateTime.Parse((string)reader["vdataotpr"]),
                     Adress = (reader["vkomu"].ToString()!.Trim(' ') + " " + Tools.IsEmpty(AkusService.QueryPc((string)reader["vhapr_spr"], "pc5"))).Trim(' ')
+                    + ", № исх. – " + (string)reader["vnomish"].ToString()!.Trim(' ')
                 };
             });
             Query = "SELECT cast(iif(empty(vd), evl(vd, NULL), ctod(substr(vd, 4, 2) + " +

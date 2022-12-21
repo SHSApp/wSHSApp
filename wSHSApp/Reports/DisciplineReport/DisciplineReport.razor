@@ -1,12 +1,12 @@
 ﻿@inject AppData appData
 @inject NavigationManager navigation
+@inject DataRepo repo;
 @inherits Report
 
 @using wSHSApp.Reports.DisciplineReport.Data;
-@inject DisciplineReportDataFiller df;
 
-<Modal @ref="modal" Closing="(t) => Rep!.RemoveReport()">
-    <ModalContent Centered>
+<Modal @ref="modal" Closing="(t) => Rep!.RemoveReport()" >
+    <ModalContent Centered Size="ModalSize.Large">
         <ModalHeader>
             <ModalTitle>@Rep?.Name</ModalTitle>
             <CloseButton />
@@ -15,7 +15,142 @@
             <Field>
                 @if (string.IsNullOrEmpty(reportDocument) && !isLoading)
                 {
-                    <center>@Rep?.Description</center>
+                    <Fields>
+                        <Field>
+                            <FieldLabel>Дата нарушения</FieldLabel>
+                            <FieldBody>
+                                <DatePicker TValue="DateTime?" DisplayFormat="dd.MM.Y" DateChanged="@(v => date = v)" Date="@date" />
+                            </FieldBody>
+                        </Field>
+                        <Field>
+                            <FieldLabel>Часы</FieldLabel>
+                            <NumericPicker TValue="int" Value="@hours" ValueChanged="@(v => { if (v > 23) hours = rejectHours = v = 23; else hours = rejectHours = v; if (v < 0) hours = rejectHours = v = 0; else hours = rejectHours = v;})" />
+                        </Field>
+                        <Field>
+                            <FieldLabel>Минуты</FieldLabel>
+                            <NumericPicker TValue="int" Value="@minutes" ValueChanged="@(v => { if (v > 59) minutes = rejectMinutes = v = 59; else minutes = rejectMinutes = v; if (v < 0) minutes = rejectMinutes = v = 0; else minutes = rejectMinutes = v;})" />
+                        </Field>
+                        <Field>
+                            <FieldLabel>Камера ШИЗО</FieldLabel>
+                            <NumericPicker @bind-Value="@isolationCell" Disabled="!isolationCellState" />
+                        </Field>
+                    </Fields>
+                    <Fields>
+                        <Field>
+                            <FieldLabel>Тип фиксации</FieldLabel>
+                            <FieldBody>
+                                <Select TValue="int" SelectedValue="@typeFixation" SelectedValueChanged="TypeFixationChanged">
+                                    <SelectItem Value="1">Видеорегистратор</SelectItem>
+                                    <SelectItem Value="2">Видеокамера ПВК</SelectItem>
+                                    <SelectItem Value="3">Рапорт сотрудника</SelectItem>
+                                </Select>
+                            </FieldBody>
+                        </Field>
+                        <Field>
+                            <FieldLabel>Регистратор</FieldLabel>
+                            <NumericPicker TValue="int" Value="@videoReg" ValueChanged="@(v => videoReg = rejectVideoReg = v)" Disabled="!videoRegState" />
+                        </Field>
+                        <Field>
+                            <FieldLabel>Видеокамера</FieldLabel>
+                            <NumericPicker @bind-Value="@videoCam" Disabled="!videoCamState"/>
+                        </Field>
+                        <Field>
+                            <FieldLabel>Монитор</FieldLabel>
+                            <NumericPicker @bind-Value="@videoMon" Disabled="!videoMonState" />
+                        </Field>                        
+                    </Fields>
+                    <Fields>
+                        <Field>
+                            <FieldLabel>Нарушение</FieldLabel>
+                            <FieldBody>
+                                <Select TValue="int" SelectedValue="@violationID" SelectedValueChanged="@((v) => {violationID = v;})" >
+                                    @foreach (var vi in repo.Violations!)
+                                    {
+                                        <SelectItem Value="@vi.Id">@vi.Name</SelectItem>
+                                    }
+                                </Select>
+                            </FieldBody>
+                        </Field>
+                        <Field>
+                            <FieldLabel>Место нарушения</FieldLabel>
+                            <FieldBody>
+                                <Select TValue="int" SelectedValue="@placeID" SelectedValueChanged="@((v) => {placeID = rejectPlaceID = v;})" >
+                                    @foreach (var pi in repo.Places!)
+                                    {
+                                        <SelectItem Value="@pi.Id">@pi.Name</SelectItem>
+                                    }
+                                </Select>
+                            </FieldBody>
+                        </Field>
+                        <Field>
+                            <FieldLabel>ДПНУ</FieldLabel>
+                            <FieldBody>
+                                <Select TValue="int" SelectedValue="@dpnuID" SelectedValueChanged="@((v) => {dpnuID = employee3 = v;})" >
+                                    @foreach (var di in repo.GetDPNUs()!)
+                                    {
+                                        <SelectItem Value="@di.Id">@di.ShortName</SelectItem>
+                                    }
+                                </Select>
+                            </FieldBody>
+                        </Field>
+                    </Fields>
+                    <Fields Label="Отказ от объяснения">
+                        <Field>
+                            <FieldLabel>Место отказа</FieldLabel>
+                            <FieldBody>
+                                <Select TValue="int" SelectedValue="@rejectPlaceID" SelectedValueChanged="@((v) => {rejectPlaceID = v;})">
+                                    @foreach (var pi in repo.Places!)
+                                    {
+                                        <SelectItem Value="@pi.Id">@pi.Name</SelectItem>
+                                    }
+                                </Select>
+                            </FieldBody>
+                        </Field>
+                        <Field>
+                            <FieldLabel>Регистратор</FieldLabel>
+                            <NumericPicker @bind-Value="@rejectVideoReg" />
+                        </Field>
+                        <Field>
+                            <FieldLabel>Часы</FieldLabel>
+                            <NumericPicker TValue="int" Value="@rejectHours" ValueChanged="@(v => { if (v > 23) rejectHours = v = 23; else rejectHours = v; if (v < 0) rejectHours = v = 0; else rejectHours = v;})" />
+                        </Field>
+                        <Field>
+                            <FieldLabel>Минуты</FieldLabel>
+                            <NumericPicker TValue="int" Value="@rejectMinutes" ValueChanged="@(v => { if (v > 59) rejectMinutes = v = 59; else rejectMinutes = v; if (v < 0) rejectMinutes = v = 0; else rejectMinutes = v;})" />
+                        </Field>
+                    </Fields>
+                    <Fields Label="Участвующие сотрудники">
+                        <Field>
+                            <FieldBody>
+                                <Select TValue="int" SelectedValue="@employee1" SelectedValueChanged="@((v) => {employee1 = v;})">
+                                    @foreach (var e in repo.Personal!)
+                                    {
+                                        <SelectItem Value="@e.Id">@($"{e.ShortName} - {e.Position?.ShortName}")</SelectItem>
+                                    }
+                                </Select>
+                            </FieldBody>
+                        </Field>
+                        <Field>
+                            <FieldBody>
+                                <Select TValue="int" SelectedValue="@employee2" SelectedValueChanged="@((v) => {employee2 = v;})">
+                                    @foreach (var e in repo.Personal!)
+                                    {
+                                        <SelectItem Value="@e.Id">@($"{e.ShortName} - {e.Position?.ShortName}")</SelectItem>
+                                    }
+                                </Select>
+                            </FieldBody>
+                        </Field>
+                        <Field>
+                            <FieldBody>
+                                <Select TValue="int" SelectedValue="@employee3" SelectedValueChanged="@((v) => {employee3 = v;})">
+                                    @foreach (var e in repo.Personal!)
+                                    {
+                                        <SelectItem Value="@e.Id">@($"{e.ShortName} - {e.Position?.ShortName}")</SelectItem>
+                                    }
+                                </Select>
+                            </FieldBody>
+                        </Field>
+                    </Fields>
                 }
                 else if (string.IsNullOrEmpty(reportDocument) && isLoading)
                 {
@@ -41,15 +176,55 @@
 @code {
     [Parameter] public IReport? Rep { set; get; }
 
+    DateTime? date = DateTime.Today;
+    int hours = DateTime.Now.Hour;
+    int minutes = DateTime.Now.Minute;
+    int typeFixation = 1;
+    int videoReg = 14;
+    int videoCam = 1;
+    int videoMon = 2;
+    int isolationCell = 6;
+    bool videoRegState = true;
+    bool videoCamState = false;
+    bool videoMonState = false;
+    bool isolationCellState = false;
+    int violationID = 1;
+    int placeID = 1;
+    int dpnuID = 1;
+    int rejectPlaceID = 1;
+    int rejectVideoReg = 14;
+    int rejectHours = DateTime.Now.Hour;
+    int rejectMinutes = DateTime.Now.Minute;
+    int employee1 = 1;
+    int employee2 = 2;
+    int employee3 = 3;
+
     protected bool isLoading;
 
     protected Modal? modal;
     protected override void OnInitialized()
     {
         args = new();
-        args.Add(appData.CurrentItemperson!);
+        args.Add(appData.CurrentItemperson!);       
+        args?.Add(date?.ToString("dd.MM.yyyy")!);
+        args?.Add(hours.ToString().PadLeft(2, '0'));
+        args?.Add(minutes.ToString().PadLeft(2, '0'));
+        args?.Add(typeFixation.ToString());
+        args?.Add(videoReg.ToString());
+        args?.Add(videoCam.ToString());
+        args?.Add(videoMon.ToString());
+        args?.Add(isolationCell.ToString());
+        args?.Add(violationID.ToString());
+        args?.Add(placeID.ToString());
+        args?.Add(dpnuID.ToString());
+        args?.Add(rejectPlaceID.ToString());
+        args?.Add(rejectVideoReg.ToString());
+        args?.Add(rejectHours.ToString().PadLeft(2, '0'));
+        args?.Add(rejectMinutes.ToString().PadLeft(2, '0'));
+        args?.Add(employee1.ToString());
+        args?.Add(employee2.ToString());
+        args?.Add(employee3.ToString());
         args?.Add("discipline.cs.docx");
-        //df.FillTables();
     }
     protected List<string>? args;
 
@@ -74,7 +249,15 @@
     public override void Show()
     {
         reportDocument = null;
-        modal?.Show();
+        modal?.Show();        
+    }
+
+    private void TypeFixationChanged(int v)
+    {
+        typeFixation = v;
+        if (v == 1) { videoRegState = true; videoCamState = false; videoMonState = false; }
+        else if (v == 2) { videoRegState = false; videoCamState = true; videoMonState = true; }
+        else if (v == 3) { videoRegState = false; videoCamState = false; videoMonState = false; }
     }
 
 }
