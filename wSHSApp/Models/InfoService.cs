@@ -42,6 +42,36 @@ public class InfoService
         return await Task.FromResult(infoItems);
     }
 
+    public async Task<TItem?> GetItemAsync<TItem>(string? Itemperson, string Query, Func<OleDbDataReader, TItem?> Action)
+    {
+        TItem? item = default;
+        if (!string.IsNullOrEmpty(Itemperson))
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    OleDbConnection Conn = new(ConnectionString);
+                    Conn.Open();
+                    OleDbCommand oCmd = Conn.CreateCommand();
+                    if (oCmd.Parameters.Count == 0) oCmd.Parameters.Add(new OleDbParameter("itemperson", OleDbType.WChar));
+                    oCmd.Parameters["itemperson"].Value = Itemperson;
+                    oCmd.CommandText = Query;
+                    OleDbDataReader reader = oCmd.ExecuteReader();
+                    reader.Read();
+                    item = Action(reader);
+                    reader.Close();
+                    Conn.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            });
+        }
+        return await Task.FromResult(item);
+    }
+
     public async Task<double> GetCountAsync(string? ItemValue, OleDbType Param, string Query)
     {
         double CountItems = default;

@@ -16,6 +16,14 @@ public static class Tools
         if (days != 0) res += days.ToString() + GetDecl(Convert.ToInt32(days), " день", " дня", " дней");
         return res;
     }
+    public static string GetTermShort(decimal years, decimal months, decimal days)
+    {
+        string res = "";
+        if (years != 0) res += years.ToString() + GetDecl(Convert.ToInt32(years), " г. ", " г. ", " л. ");
+        if (months != 0) res += months.ToString() + " м. ";
+        if (days != 0) res += days.ToString() + " д.";
+        return res + " л/св.";
+    }
     public static string GetDecl(int num, string one, string two, string five)
     {
         int n = num % 100;
@@ -35,6 +43,28 @@ public static class Tools
         return five;
     }
 
+    public static string Decl(string num, string one, string two, string five)
+    {
+        int convertedNum = Convert.ToInt32(num);
+        int n = convertedNum % 100;
+        if (n >= 5 && n <= 20)
+        {
+            return $"{num} {five}";
+        }
+        n = convertedNum % 10;
+        if (n == 1)
+        {
+            return $"{num} {one}";
+        }
+        if (n >= 2 && n <= 4)
+        {
+            return $"{num} {two}";
+        }
+        return $"{num} {five}";
+    }
+
+    public static string Decl(int num, string one, string two, string five) => Decl(num.ToString(), one, two, five);
+
     public static List<TItem> ReverseArray<TItem>(List<TItem> src)
     {
         var dst = new List<TItem>();
@@ -44,31 +74,20 @@ public static class Tools
         }
         return dst;
     }
-    public static string GetDecl(int num, string one, string two)
-    {
-        return GetDecl(num, one, two, two);
-    }
 
-    public static string GetMaritalStatus(decimal status)
-    {
-        return status == 1 ? "Женат" : "Не женат";
-    }
+    public static string GetDecl(int num, string one, string two) => GetDecl(num, one, two, two);
 
-    public static string IsEmpty(string src)
-    {
-        return src.Length < 2 ? "" : src;
-    }
+    public static string GetMaritalStatus(decimal status) => status == 1 ? "Женат" : "Не женат";
 
-    public static string GetDepartureType(decimal type)
+    public static string IsEmpty(string src) => src.Length < 2 ? "" : src;
+    
+    public static string GetDepartureType(decimal type) => Convert.ToInt32(type) switch
     {
-        return Convert.ToInt32(type) switch
-        {
-            1 => "Район",
-            2 => "Колония",
-            3 => "Колония-поселение",
-            _ => "Неизвестно"
-        };
-    }
+        1 => "Район",
+        2 => "Колония",
+        3 => "Колония-поселение",
+        _ => "Неизвестно"
+    };
 
     public static string CombineAdress(string Country, string Region, string City, string Adress)
     {
@@ -135,10 +154,7 @@ public static class Tools
         else return "По положенности";
     }
 
-    public static string ExPackageNote(string src)
-    {
-        return ExPackageNote(src, "");
-    }
+    public static string ExPackageNote(string src) => ExPackageNote(src, "");
 
     public static string ExMeetingDuration(string src, decimal vid)
     {
@@ -151,62 +167,47 @@ public static class Tools
         else return "Не определена";
     }
 
-    public static string GetPartUDO(decimal Part)
+    public static string GetPartUDO(decimal Part) => Convert.ToInt32(Part) switch
     {
-        return Convert.ToInt32(Part) switch
-        {
-            1 => "1/3",
-            2 => "1/2",
-            3 => "2/3",
-            4 => "3/4",
-            5 => "4/5",
-            _ => "3/4"
-        };
-    }
+        1 => "1/3",
+        2 => "1/2",
+        3 => "2/3",
+        4 => "3/4",
+        5 => "4/5",
+        _ => "3/4"
+    };
 
-    public static string GetPartKP(decimal Part)
+    public static string GetPartKP(decimal Part) => Convert.ToInt32(Part) switch
     {
-        return Convert.ToInt32(Part) switch
-        {
-            1 => "1/4",
-            2 => "1/3",
-            3 => "1/2",
-            4 => "2/3",
-            5 => "3/4",
-            6 => "4/5",
-            _ => "2/3"
-        };
-    }
+        1 => "1/4",
+        2 => "1/3",
+        3 => "1/2",
+        4 => "2/3",
+        5 => "3/4",
+        6 => "4/5",
+        _ => "2/3"
+    };
+    
+    public static string GetPartZMN(decimal Part) => Convert.ToInt32(Part) switch
+    {
+        1 => "1/3",
+        2 => "1/2",
+        3 => "2/3",
+        4 => "3/4",
+        5 => "4/5",
+        _ => "2/3"
+    };
 
-    public static string GetPartZMN(decimal Part)
+    public static string GetPartPR(decimal Part) => Convert.ToInt32(Part) switch
     {
-        return Convert.ToInt32(Part) switch
-        {
-            1 => "1/3",
-            2 => "1/2",
-            3 => "2/3",
-            4 => "3/4",
-            5 => "4/5",
-            _ => "2/3"
-        };
-    }
+        1 => "1/4",
+        2 => "1/3",
+        3 => "1/2",
+        4 => "3/4",
+        5 => "4/5",
+        _ => "1/2"
+    };
 
-    public static string GetPartPR(decimal Part)
-    {
-        return Convert.ToInt32(Part) switch
-        {
-            1 => "1/4",
-            2 => "1/3",
-            3 => "1/2",
-            4 => "3/4",
-            5 => "4/5",
-            _ => "1/2"
-        };
-    }
+    public static string Proper(string str) => string.IsNullOrEmpty(str) ? "" : char.ToUpper(str[0]) + str[1..];
 
-    public static string Proper(string str)
-    {
-        if (str.Length > 0) { return char.ToUpper(str[0]) + str[1..]; }
-        return "";
-    }
 }    

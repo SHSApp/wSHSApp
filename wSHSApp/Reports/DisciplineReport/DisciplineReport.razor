@@ -63,7 +63,7 @@
                         <Field>
                             <FieldLabel>Нарушение</FieldLabel>
                             <FieldBody>
-                                <Select TValue="int" SelectedValue="@violationID" SelectedValueChanged="@((v) => {violationID = v;})" >
+                                <Select TValue="int" SelectedValue="@violationId" SelectedValueChanged="@((v) => {violationId = v;})" >
                                     @foreach (var vi in repo.Violations!)
                                     {
                                         <SelectItem Value="@vi.Id">@vi.Name</SelectItem>
@@ -74,7 +74,7 @@
                         <Field>
                             <FieldLabel>Место нарушения</FieldLabel>
                             <FieldBody>
-                                <Select TValue="int" SelectedValue="@placeID" SelectedValueChanged="@((v) => {placeID = rejectPlaceID = v;})" >
+                                <Select TValue="int" SelectedValue="@placeID" SelectedValueChanged="@((v) => {placeID = rejectPlaceId = v;})" >
                                     @foreach (var pi in repo.Places!)
                                     {
                                         <SelectItem Value="@pi.Id">@pi.Name</SelectItem>
@@ -85,8 +85,8 @@
                         <Field>
                             <FieldLabel>ДПНУ</FieldLabel>
                             <FieldBody>
-                                <Select TValue="int" SelectedValue="@dpnuID" SelectedValueChanged="@((v) => {dpnuID = employee3 = v;})" >
-                                    @foreach (var di in repo.GetDPNUs()!)
+                                <Select TValue="int" SelectedValue="@dpnuId" SelectedValueChanged="@((v) => {dpnuId = employee3 = v;})" >
+                                    @foreach (var di in repo.GetDPNUs()?.OrderBy(e => e.ShortName)!)
                                     {
                                         <SelectItem Value="@di.Id">@di.ShortName</SelectItem>
                                     }
@@ -98,7 +98,7 @@
                         <Field>
                             <FieldLabel>Место отказа</FieldLabel>
                             <FieldBody>
-                                <Select TValue="int" SelectedValue="@rejectPlaceID" SelectedValueChanged="@((v) => {rejectPlaceID = v;})">
+                                <Select TValue="int" SelectedValue="@rejectPlaceId" SelectedValueChanged="@((v) => {rejectPlaceId = v;})">
                                     @foreach (var pi in repo.Places!)
                                     {
                                         <SelectItem Value="@pi.Id">@pi.Name</SelectItem>
@@ -122,8 +122,8 @@
                     <Fields Label="Участвующие сотрудники">
                         <Field>
                             <FieldBody>
-                                <Select TValue="int" SelectedValue="@employee1" SelectedValueChanged="@((v) => {employee1 = v;})">
-                                    @foreach (var e in repo.Personal!)
+                                <Select TValue="int" SelectedValue="@employee1" SelectedValueChanged="@((v) => {employee1 = v;})" >
+                                    @foreach (var e in repo.Personal?.OrderBy(e => e.DepartmentId).ThenBy(e => e.ShortName)!)
                                     {
                                         <SelectItem Value="@e.Id">@($"{e.ShortName} - {e.Position?.ShortName}")</SelectItem>
                                     }
@@ -133,7 +133,7 @@
                         <Field>
                             <FieldBody>
                                 <Select TValue="int" SelectedValue="@employee2" SelectedValueChanged="@((v) => {employee2 = v;})">
-                                    @foreach (var e in repo.Personal!)
+                                    @foreach (var e in repo.Personal?.OrderBy(e => e.DepartmentId).ThenBy(e => e.ShortName)!)
                                     {
                                         <SelectItem Value="@e.Id">@($"{e.ShortName} - {e.Position?.ShortName}")</SelectItem>
                                     }
@@ -143,7 +143,7 @@
                         <Field>
                             <FieldBody>
                                 <Select TValue="int" SelectedValue="@employee3" SelectedValueChanged="@((v) => {employee3 = v;})">
-                                    @foreach (var e in repo.Personal!)
+                                    @foreach (var e in repo.Personal?.OrderBy(e => e.DepartmentId).ThenBy(e => e.ShortName)!)
                                     {
                                         <SelectItem Value="@e.Id">@($"{e.ShortName} - {e.Position?.ShortName}")</SelectItem>
                                     }
@@ -167,6 +167,12 @@
             </Field>
         </ModalBody>
         <ModalFooter>
+            <Select Disabled="isLoading" Style="width:auto; margin-right:auto;" TValue="int" SelectedValue="@headId" SelectedValueChanged="@((v) => {headId = v;})">
+                @foreach (var e in repo?.Personal?.Where(i => i.PositionId > 20 && i.PositionId < 24).OrderByDescending(i => i.PositionId).ThenBy(i => i.ShortName)!)
+                {
+                    <SelectItem Value="@e.Id">@($"{e.ShortName} - {e.Position?.ShortName}")</SelectItem>
+                }
+            </Select>
             <Button Disabled="isLoading" Color="Color.Secondary" Clicked="@(() => CloseClick(modal))">Закрыть</Button>
             <Button Disabled="isLoading" Color="Color.Primary" Clicked="@ReportClick">Сформировать</Button>
         </ModalFooter>
@@ -188,50 +194,50 @@
     bool videoCamState = false;
     bool videoMonState = false;
     bool isolationCellState = false;
-    int violationID = 1;
+    int violationId = 1;
     int placeID = 1;
-    int dpnuID = 1;
-    int rejectPlaceID = 1;
+    int dpnuId = 1;
+    int rejectPlaceId = 1;
     int rejectVideoReg = 14;
     int rejectHours = DateTime.Now.Hour;
     int rejectMinutes = DateTime.Now.Minute;
     int employee1 = 1;
     int employee2 = 2;
     int employee3 = 3;
+    int headId = 1;
 
     protected bool isLoading;
 
     protected Modal? modal;
-    protected override void OnInitialized()
-    {
-        args = new();
-        args.Add(appData.CurrentItemperson!);       
-        args?.Add(date?.ToString("dd.MM.yyyy")!);
-        args?.Add(hours.ToString().PadLeft(2, '0'));
-        args?.Add(minutes.ToString().PadLeft(2, '0'));
-        args?.Add(typeFixation.ToString());
-        args?.Add(videoReg.ToString());
-        args?.Add(videoCam.ToString());
-        args?.Add(videoMon.ToString());
-        args?.Add(isolationCell.ToString());
-        args?.Add(violationID.ToString());
-        args?.Add(placeID.ToString());
-        args?.Add(dpnuID.ToString());
-        args?.Add(rejectPlaceID.ToString());
-        args?.Add(rejectVideoReg.ToString());
-        args?.Add(rejectHours.ToString().PadLeft(2, '0'));
-        args?.Add(rejectMinutes.ToString().PadLeft(2, '0'));
-        args?.Add(employee1.ToString());
-        args?.Add(employee2.ToString());
-        args?.Add(employee3.ToString());
-        args?.Add("discipline.cs.docx");
-    }
+
     protected List<string>? args;
 
     protected string? reportDocument;
 
     protected async Task ReportClick()
     {
+        args = new();
+        args?.Add(appData.CurrentItemperson!); //0
+        args?.Add(typeFixation == 3 ? "discipline2.cs.docx" : "discipline1.cs.docx"); //1
+        args?.Add(date?.ToString("«dd» MMMM yyyy")!); //2
+        args?.Add(hours.ToString().PadLeft(2, '0')); //3
+        args?.Add(minutes.ToString().PadLeft(2, '0')); //4
+        args?.Add(typeFixation.ToString()); //5
+        args?.Add(videoReg.ToString()); //6
+        args?.Add(videoCam.ToString()); //7
+        args?.Add(videoMon.ToString()); //8
+        args?.Add(isolationCell.ToString()); //9
+        args?.Add(violationId.ToString()); //10
+        args?.Add(placeID.ToString()); //11
+        args?.Add(dpnuId.ToString()); //12
+        args?.Add(rejectPlaceId.ToString()); //13
+        args?.Add(rejectVideoReg.ToString()); //14
+        args?.Add(rejectHours.ToString().PadLeft(2, '0')); //15
+        args?.Add(rejectMinutes.ToString().PadLeft(2, '0')); //16
+        args?.Add(employee1.ToString()); //17
+        args?.Add(employee2.ToString()); //18
+        args?.Add(employee3.ToString()); //19
+        args?.Add(headId.ToString()); //20
         isLoading = true;
         reportDocument = null;
         StateHasChanged();
@@ -249,6 +255,9 @@
     public override void Show()
     {
         reportDocument = null;
+        dpnuId = repo?.GetDPNUs()?.OrderBy(i => i.ShortName).FirstOrDefault()?.Id! ?? 0;
+        employee3 = dpnuId == 0 ? 3 : dpnuId;
+        headId = repo?.Personal?.Where(i => i.PositionId > 20 && i.PositionId < 24).OrderByDescending(i => i.PositionId).ThenBy(i => i.ShortName).FirstOrDefault()?.Id ?? 0;
         modal?.Show();        
     }
 

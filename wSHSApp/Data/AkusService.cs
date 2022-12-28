@@ -21,11 +21,23 @@ public static class AkusService
         {
             int index = Array.IndexOf(pcNames, "pc52");
             string result = string.Empty;
-            var res = from item in pcCollections[index].AsEnumerable() where item.Id == Id select item.Name;
-            result = res.First().Contains("Кар") ? "Отделение \"Карантин\"" : "Отряд № " + res.First();
+            var res = from item in pcCollections[index] where item.Id == Id select item.Name;
+            result = res.First().Contains("Кар") ? "Отделение \"Карантин\"" : "Отряд № " + res.First().Trim(' ');
             return result;
         }
         else return "Отряд не указан";
+    }
+    public static string GetGroupDecl(string Id)
+    {
+        if (Id.Trim(' ').Length > 0)
+        {
+            int index = Array.IndexOf(pcNames, "pc52");
+            string result = string.Empty;
+            var res = from item in pcCollections[index] where item.Id == Id select item.Name;
+            result = res.First().Contains("Кар") ? "отделения «Карантин»" : "отряда № " + res.First().Trim(' ');
+            return result;
+        }
+        else return "отделения «Карантин»";
     }
 
     public static string Get(string Id, string Pc)

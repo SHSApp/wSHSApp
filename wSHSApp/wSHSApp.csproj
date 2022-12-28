@@ -72,7 +72,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Reports\DisciplineReport\Model\" />
     <Folder Include="Reports\Output\" />
 	<Folder Include="Reports\Templates\" />
   </ItemGroup>

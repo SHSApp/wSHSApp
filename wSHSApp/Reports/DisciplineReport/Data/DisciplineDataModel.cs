@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using wSHSApp.Models;
 
 namespace wSHSApp.Reports.DisciplineReport.Data;
 
@@ -71,5 +72,14 @@ public class Option : BaseEntity
     public required string Name { get; set; }
     public required string Value { get; set; }
 }
+
+//public struct DisciplineReport
+//{
+//    int violationId;
+//    int placeId;
+//    int rejectPlaceId;
+//    int 
+
+//}
 
 //#pragma warning restore CS8618

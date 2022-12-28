@@ -23,9 +23,6 @@ public class DataRepo
     public List<Place>? Places { get; set; }
     public List<Option>? Options { get; set; }
 
-    public List<Employee>? GetDPNUs()
-    {
-        return Personal!.Where(i => i.Position?.ShortName == "ДПНУ").ToList();
-    }
+    public List<Employee>? GetDPNUs() => Personal!.Where(i => i.Position?.ShortName == "ДПНУ").ToList();
 
 }

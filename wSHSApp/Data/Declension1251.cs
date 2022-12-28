@@ -398,7 +398,7 @@ namespace FSLib.Declension
         /// <returns>Падеж</returns>
         public static DeclensionCase GetDeclensionCase(string surnameNamePatronimic)
         {
-            if(surnameNamePatronimic == null) throw new ArgumentNullException("surnameNamePatronimic");
+            if(surnameNamePatronimic == null) throw new ArgumentNullException(nameof(surnameNamePatronimic));
 
             IntPtr ptr = IntPtr.Zero;
             try

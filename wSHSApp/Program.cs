@@ -56,8 +56,8 @@ builder.Services.AddSingleton<ExtraInfoService>();
 builder.Services.AddSingleton<AdditionalInfoService>();
 builder.Services.AddScoped<BrowserService>();
 builder.Services.AddSingleton<StatisticInfoService>();
-builder.Services.AddSingleton(sp => new List<IReport>() { new LetterReportService(), new DisciplineReportService() });
 builder.Services.AddScoped<DataRepo>();
+builder.Services.AddScoped(sp => new List<IReport>() { new LetterReportService(), new DisciplineReportService(sp.GetRequiredService<DataRepo>()) });
 
 builder.Services
     .AddBlazorise(options =>

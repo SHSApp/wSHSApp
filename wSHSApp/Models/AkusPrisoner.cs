@@ -8,6 +8,7 @@ public class AkusPrisoner
     public string? Birthday { get; set; }
     public string? Itemperson { get; set; }
     public string? GroupId { get; set; }
+    public string? SettingData { get; set; }
     public string ToString(bool getFullname) =>
         getFullname ? $"{Surname} {Name}{(!string.IsNullOrWhiteSpace(Lastname) ? " " + Lastname : "")}"
         : $"{Surname} {Name?.ToUpper()[0]}.{(!string.IsNullOrWhiteSpace(Lastname) ? Lastname?.ToUpper()[0] + "." : "")}";

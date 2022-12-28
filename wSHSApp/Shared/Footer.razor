@@ -1,6 +1,6 @@
 ﻿<BorderedItem Class="mt-1">
     <Row>
-        <Column ColumnSize="ColumnSize.Is6.OnFullHD.Is12.OnTablet">
+        <Column ColumnSize="ColumnSize.Is8">
                 <span><RadioGroup TValue="bool" Name="sort" Buttons CheckedValue="@СheckedValue" CheckedValueChanged="@OnCheckedValueChanged">
                     <Radio Value="@false">По возрастанию <span class="oi oi-sort-ascending" aria-hidden="true"></span></Radio>
                     <Radio Value="@true"><span class="oi oi-sort-descending" aria-hidden="true"></span> По убыванию</Radio>
@@ -8,7 +8,7 @@
                 @Text</span>
         </Column>
         <AuthorizeView>
-            <Column ColumnSize="ColumnSize.Is6.OnFullHD.Is12.OnTablet" Class="d-flex justify-content-end">
+            <Column ColumnSize="ColumnSize.Is4">
                 <ReportButton />
             </Column>
         </AuthorizeView>
