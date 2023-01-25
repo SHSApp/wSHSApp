@@ -7,8 +7,6 @@ using wSHSApp.Models;
 using wSHSApp.Reports.DisciplineReport.Model;
 using SharpDocx;
 using wSHSApp.Reports.DisciplineReport.Data;
-using System.Drawing.Text;
-using wSHSApp.Components;
 
 namespace wSHSApp.Reports.DisciplineReport;
 
@@ -51,6 +49,8 @@ public class DisciplineReportService : InfoService, IReport
                 Violation = ReplaceSubstrings(currentPrisoner!, Convert.ToInt32(args[10]), Convert.ToInt32(args[17]), Convert.ToInt32(args[11]), Convert.ToInt32(args[9])),
                 FixationText = fixationText,
                 HeadText = head.PositionId == 23 ? "Начальнику" : "Врио начальника",
+                GroupIdText = AkusService.GetGroup(currentPrisoner?.GroupId!),
+                YearText = DateTime.Now.ToString("yyyy"),
                 Dpnu = dpnu,
                 Emploee1 = repo?.Personal?.First(i => i.Id == Convert.ToInt32(args[17])),
                 Emploee2 = repo?.Personal?.First(i => i.Id == Convert.ToInt32(args[18])),
@@ -59,8 +59,8 @@ public class DisciplineReportService : InfoService, IReport
             };
 
             documentOutput = GenerateReportFileName(currentPrisoner!.ToString());
-            //var documentInput = DocumentFactory.Create(Path.Combine("Reports/Templates", args[1]), Model);
-            //documentInput.Generate(Path.Combine("Reports/Output", documentOutput), Model);
+            var documentInput = DocumentFactory.Create(Path.Combine("Reports/Templates", args[1]), Model);
+            documentInput.Generate(Path.Combine("Reports/Output", documentOutput), Model);
         });
         return await Task.FromResult(Path.Combine("/Documents", documentOutput));
     }
@@ -77,10 +77,20 @@ public class DisciplineReportService : InfoService, IReport
     }
     private Violation ReplaceSubstrings(AkusPrisoner prisoner, int violationId, int employeeId, int placeId, int cell)
     {
-        Violation output = repo?.Violations?.First(i => i.Id == violationId)!;
+        Violation src = repo?.Violations?.First(i => i.Id == violationId)!;
+        Violation output = new()
+        {
+            Name = src.Name,
+            PreambleText = src.PreambleText,
+            ViolationText = src.ViolationText,
+            ViolationAdditionalText = src.ViolationAdditionalText,
+            VideoText = src.VideoText,
+            RulesText = src.RulesText,
+            RejectionText = src.RejectionText,
+        };
         output.PreambleText = string.IsNullOrEmpty(output.PreambleText) ? "" : ReplaceSubstring(output.PreambleText);
         output.ViolationText = string.IsNullOrEmpty(output.ViolationText) ? "" : ReplaceSubstring(output.ViolationText);
-        output.ViolationAdditionalText = string.IsNullOrEmpty(output.ViolationAdditionalText) ? "" : ReplaceSubstring(output.ViolationAdditionalText!);
+        output.ViolationAdditionalText = string.IsNullOrEmpty(output.ViolationAdditionalText) ? output.ViolationText : ReplaceSubstring(output.ViolationAdditionalText!);
         output.RulesText = string.IsNullOrEmpty(output.RulesText) ? "" : ReplaceSubstring(output.RulesText);
         output.VideoText = string.IsNullOrEmpty(output.VideoText) ? "" : ReplaceSubstring(output.VideoText!);
         output.RejectionText = string.IsNullOrEmpty(output.RejectionText) ? "" : ReplaceSubstring(output.RejectionText);

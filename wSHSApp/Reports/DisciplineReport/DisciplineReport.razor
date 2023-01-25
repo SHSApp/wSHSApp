@@ -167,12 +167,15 @@
             </Field>
         </ModalBody>
         <ModalFooter>
-            <Select Disabled="isLoading" Style="width:auto; margin-right:auto;" TValue="int" SelectedValue="@headId" SelectedValueChanged="@((v) => {headId = v;})">
+            @if (string.IsNullOrEmpty(reportDocument))
+            {
+                <Select Disabled="isLoading" Style="width:auto; margin-right:auto;" TValue="int" SelectedValue="@headId" SelectedValueChanged="@((v) => {headId = v;})">
                 @foreach (var e in repo?.Personal?.Where(i => i.PositionId > 20 && i.PositionId < 24).OrderByDescending(i => i.PositionId).ThenBy(i => i.ShortName)!)
                 {
                     <SelectItem Value="@e.Id">@($"{e.ShortName} - {e.Position?.ShortName}")</SelectItem>
                 }
-            </Select>
+                </Select>
+            }            
             <Button Disabled="isLoading" Color="Color.Secondary" Clicked="@(() => CloseClick(modal))">Закрыть</Button>
             <Button Disabled="isLoading" Color="Color.Primary" Clicked="@ReportClick">Сформировать</Button>
         </ModalFooter>
@@ -193,7 +196,7 @@
     bool videoRegState = true;
     bool videoCamState = false;
     bool videoMonState = false;
-    bool isolationCellState = false;
+    bool isolationCellState = true;
     int violationId = 1;
     int placeID = 1;
     int dpnuId = 1;

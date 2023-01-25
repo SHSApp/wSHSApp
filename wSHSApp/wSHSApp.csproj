@@ -22,6 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Reports\Templates\discipline1.cs.docx" />
+    <None Remove="Reports\Templates\discipline2.cs.docx" />
     <None Remove="usersdb.db-shm" />
     <None Remove="usersdb.db-wal" />
   </ItemGroup>
@@ -73,7 +75,6 @@
   <ItemGroup>
     <Folder Include="Migrations\" />
     <Folder Include="Reports\Output\" />
-	<Folder Include="Reports\Templates\" />
   </ItemGroup>
 	
 	<ItemGroup>

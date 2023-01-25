@@ -73,13 +73,4 @@ public class Option : BaseEntity
     public required string Value { get; set; }
 }
 
-//public struct DisciplineReport
-//{
-//    int violationId;
-//    int placeId;
-//    int rejectPlaceId;
-//    int 
-
-//}
-
 //#pragma warning restore CS8618

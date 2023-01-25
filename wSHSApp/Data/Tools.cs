@@ -21,8 +21,8 @@ public static class Tools
         string res = "";
         if (years != 0) res += years.ToString() + GetDecl(Convert.ToInt32(years), " г. ", " г. ", " л. ");
         if (months != 0) res += months.ToString() + " м. ";
-        if (days != 0) res += days.ToString() + " д.";
-        return res + " л/св.";
+        if (days != 0) res += days.ToString() + " д. ";
+        return res + "л/св.";
     }
     public static string GetDecl(int num, string one, string two, string five)
     {
@@ -210,4 +210,5 @@ public static class Tools
 
     public static string Proper(string str) => string.IsNullOrEmpty(str) ? "" : char.ToUpper(str[0]) + str[1..];
 
+    public static string SwapSNL(string snl) => snl.Substring(snl.IndexOf(' ') + 1) + " " + snl.Remove(snl.IndexOf(' '));
 }    
